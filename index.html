@@ -1,0 +1,2478 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>DILOG MDN | Drones C-UAS</title>
+<style>
+:root{
+--bg:#eceff1;
+--panel:#ffffff;
+--ink:#0f172a;
+--muted:#64748b;
+--border:#e2e8f0;
+--nav:#0d1242;
+--nav2:#11164f;
+--amber:#f59e0b;
+--amber2:#d97706;
+--cyan:#06b6d4;
+--indigo:#4f46e5;
+--rose:#e11d48;
+--green:#16a34a;
+--sap-bg:#eef3fa;
+--sap-border:#aebfd5;
+--sap-border2:#a0a0a0;
+--sap-blue:#003366;
+--sap-blue2:#002244;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{margin:0;font-family:Segoe UI,Tahoma,sans-serif;background:var(--bg);color:var(--ink);user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-touch-callout:none}
+button,input,select{font-family:inherit;font-size:16px;touch-action:manipulation;-webkit-appearance:none}
+/* Focus visible for accessibility */
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.app{display:flex;height:100%;height:100dvh;overflow:hidden;position:relative}
+/* Sidebar */
+.sidebar{width:256px;background:var(--nav);color:#fff;transition:width .25s ease;display:flex;flex-direction:column;box-shadow:0 20px 40px rgba(0,0,0,.25);z-index:40;-webkit-overflow-scrolling:touch}
+.sidebar.compact{width:80px}
+.sb-header{padding:22px 18px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,.10);flex-shrink:0}
+.logo{background:var(--amber);color:var(--nav);width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0}
+.sb-title h1{margin:0;font-size:16px;line-height:1;color:var(--amber);font-weight:900;text-transform:uppercase}
+.sb-title span{display:block;margin-top:2px;font-size:10px;color:#94a3b8;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+.sidebar.compact .sb-title{display:none}
+.sb-nav{padding:14px 10px;display:flex;flex-direction:column;gap:8px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sb-btn{width:100%;background:transparent;border:0;color:#cbd5e1;cursor:pointer;padding:12px 12px;border-radius:14px;display:flex;gap:12px;align-items:center;transition:background .15s ease,color .15s ease;touch-action:manipulation}
+.sb-btn:hover{background:rgba(255,255,255,.08);color:#e2e8f0}
+.sb-btn.active{background:var(--amber);color:#0b1220;font-weight:900}
+.sb-btn .ic{width:24px;display:inline-flex;justify-content:center;flex-shrink:0}
+.sidebar.compact .sb-btn span{display:none}
+/* Author Credit - Sidebar Bottom */
+.sb-author{
+padding:16px 14px;
+background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(217,119,6,.15));
+border-top:1px solid rgba(255,255,255,.10);
+font-size:10px;
+text-align:center;
+color:#94a3b8;
+flex-shrink:0;
+}
+.sb-author .highlight{color:var(--amber);font-weight:900;display:block;margin-bottom:2px}
+.sb-author .ai{background:rgba(245,158,11,.2);padding:2px 6px;border-radius:999px;font-size:9px;color:var(--amber)}
+.sidebar.compact .sb-author{display:none}
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;height:100%}
+.topbar{height:56px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:12px;min-width:0}
+.iconbtn{border:0;background:transparent;cursor:pointer;padding:10px;border-radius:10px;color:#475569;touch-action:manipulation}
+.iconbtn:hover{background:#f1f5f9}
+.h-title{margin:0;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-right{display:flex;align-items:center;gap:10px;overflow:auto;-webkit-overflow-scrolling:touch}
+.assist-btn{
+border:1px solid #b45309;
+background:linear-gradient(90deg,var(--amber),#fbbf24);
+color:#0b1220;
+font-weight:900;
+font-size:12px;
+padding:8px 12px;
+border-radius:10px;
+cursor:pointer;
+display:inline-flex;
+align-items:center;
+gap:8px;
+white-space:nowrap;
+box-shadow:0 6px 16px rgba(245,158,11,.25);
+touch-action:manipulation;
+-webkit-appearance:none;
+}
+.assist-btn:hover{filter:brightness(.98)}
+.content{flex:1;overflow:auto;padding:22px;background:#f4f7fa;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+/* Cards */
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,.06)}
+.row{display:flex;gap:14px;align-items:center}
+.col{display:flex;flex-direction:column;gap:6px}
+.muted{color:var(--muted)}
+.badge{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--border);background:#f8fafc;padding:4px 8px;border-radius:999px}
+/* Inputs */
+.searchwrap{position:relative;width:100%}
+.searchwrap input{
+width:100%;
+padding:12px 14px 12px 40px;
+border:1px solid var(--border);
+border-radius:14px;
+background:#f8fafc;
+outline:none;
+font-weight:800;
+font-size:16px;
+-webkit-appearance:none;
+}
+.searchwrap input:focus{box-shadow:0 0 0 3px rgba(245,158,11,.25);border-color:transparent}
+.searchwrap .sicon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none}
+/* Tables */
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid #eef2f7;padding:14px 14px;text-align:left;vertical-align:top}
+thead th{font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.thead-dark th{background:var(--nav);color:#fff;border-bottom:1px solid #0b1220}
+.thead-blue th{background:#002a52;color:#fff;border-bottom:1px solid #0b1220}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+.pill{
+display:inline-flex;align-items:center;gap:8px;
+padding:6px 10px;border-radius:12px;
+border:1px solid var(--border);background:#f1f5f9;
+font-weight:900;font-size:12px;
+box-shadow:0 2px 8px rgba(2,6,23,.06)
+}
+.copybtn{border:0;background:transparent;cursor:pointer;color:#94a3b8;padding:10px;border-radius:12px;touch-action:manipulation}
+.copybtn:hover{background:#fff7ed;color:#b45309}
+.copybtn.copied{color:#10b981}
+/* Filter chips */
+.chipbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.chip{
+border:2px solid #f1f5f9;background:#fff;color:#475569;
+padding:10px 10px;border-radius:14px;cursor:pointer;
+display:flex;gap:8px;align-items:center;
+font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+transition:all .15s ease;
+touch-action:manipulation;
+-webkit-appearance:none;
+}
+.chip:hover{border-color:#fde68a;background:#f8fafc}
+.chip.active{border-color:var(--amber);background:#fffbeb;color:#b45309;box-shadow:0 6px 16px rgba(245,158,11,.12)}
+.chip .ic{opacity:.85}
+/* SAP look */
+.sap-wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.sap-head{background:var(--sap-bg);border:1px solid var(--sap-border);border-radius:6px;padding:12px;box-shadow:0 6px 16px rgba(2,6,23,.06);display:flex;flex-direction:column;gap:8px}
+.sap-line{display:flex;align-items:center;gap:12px}
+.sap-lbl{width:64px;text-align:right;font-size:11px;color:#444;font-weight:900}
+.sap-in{
+border:1px solid #7f9db9;padding:2px 6px;font-size:12px;
+box-shadow:inset 0 1px 2px rgba(0,0,0,.10);
+outline:none;border-radius:2px;-webkit-appearance:none;
+}
+.sap-in.ro{background:#f0f0f0;color:#666}
+.sap-tabs{background:var(--sap-bg);border:1px solid var(--sap-border);border-radius:8px;overflow:hidden;box-shadow:0 14px 30px rgba(2,6,23,.10);min-height:520px;display:flex;flex-direction:column}
+.tabbar{display:flex;gap:6px;padding:10px 10px 0;background:#dce6f2;border-bottom:1px solid var(--sap-border);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabbtn{
+border:1px solid transparent;
+background:#ced9e7;color:#555;
+padding:8px 12px;font-size:11px;font-weight:900;border-radius:8px 8px 0 0;
+cursor:pointer;transition:all .15s ease;
+touch-action:manipulation;
+-webkit-appearance:none;
+white-space:nowrap;
+}
+.tabbtn:hover{background:#dfe9f5}
+.tabbtn.active{background:var(--sap-bg);border-color:var(--sap-border);color:var(--sap-blue);position:relative;top:1px;z-index:2}
+.sap-body{padding:18px;background:var(--sap-bg);flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+.sap-box{
+position:relative;border:1px solid var(--sap-border2);border-radius:4px;background:#fcfcfc;
+padding:16px 14px 12px;margin-bottom:14px;box-shadow:0 4px 10px rgba(2,6,23,.06)
+}
+.sap-box > .cap{
+position:absolute;top:-10px;left:10px;background:var(--sap-bg);
+padding:0 6px;font-size:11px;font-weight:900;color:var(--sap-blue)
+}
+.sap-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sap-row .lab{width:140px;text-align:right;font-size:11px;color:#444}
+.sap-row .grow{flex:1}
+.sap-row small{font-size:11px;color:#111827}
+.sap-help{border:0;background:transparent;cursor:pointer;padding:4px;border-radius:6px;touch-action:manipulation}
+.sap-help:hover{background:#e2e8f0}
+/* Modal */
+.modal-back{position:fixed;inset:0;background:rgba(2,6,23,.55);display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:120;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-back.show{display:flex}
+.modal{width:100%;max-width:920px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden;max-height:90vh;display:flex;flex-direction:column;margin:auto}
+.modal.small{max-width:1100px}
+.modal.large{max-width:1200px}
+.m-head{padding:14px 16px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.m-head .ttl{display:flex;gap:10px;align-items:center;font-weight:900}
+.m-body{padding:16px;background:#f8fafc;overflow:auto;-webkit-overflow-scrolling:touch;flex:1}
+.m-foot{padding:14px 16px;background:#f1f5f9;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0}
+.m-x{border:0;background:rgba(255,255,255,.16);color:#fff;cursor:pointer;border-radius:999px;padding:8px 10px;touch-action:manipulation}
+.m-x:hover{background:rgba(255,255,255,.24)}
+.btn{border:0;cursor:pointer;border-radius:10px;padding:10px 14px;font-weight:900;font-size:12px;touch-action:manipulation;-webkit-appearance:none}
+.btn.ghost{background:transparent;color:#475569}
+.btn.ghost:hover{background:#e2e8f0}
+.btn.primary{background:var(--sap-blue);color:#fff}
+.btn.primary:hover{background:var(--sap-blue2)}
+.btn.dark{background:#e2e8f0;color:#334155}
+.btn.dark:hover{background:#cbd5e1}
+.section{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:0 4px 12px rgba(2,6,23,.05)}
+.sec-title{margin:0 0 10px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#0f172a;border-bottom:1px solid #eef2f7;padding-bottom:10px;display:flex;gap:10px;align-items:center}
+.grid{display:grid;gap:12px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
+label{display:block;font-size:11px;font-weight:900;color:#475569;margin-bottom:6px}
+select,input[type="text"]{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px 10px;font-size:16px;outline:none;background:#fff;-webkit-appearance:none}
+select:disabled,input:disabled{background:#f1f5f9;color:#94a3b8}
+.hint{font-size:12px;color:#0e7490;background:#ecfeff;border:1px solid #cffafe;padding:10px;border-radius:10px}
+.hint .mono{background:#fff;border:1px solid #bae6fd;padding:2px 6px;border-radius:6px}
+/* Drones filter buttons */
+.df{display:flex;gap:8px;flex-wrap:wrap}
+.df button{border:1px solid var(--border);background:#fff;color:#475569;padding:10px 14px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;touch-action:manipulation;-webkit-appearance:none}
+.df button:hover{background:#f8fafc}
+.df button.active{background:#0f172a;color:#fff;border-color:#0b1220;box-shadow:0 8px 18px rgba(2,6,23,.15)}
+.df button.cyan.active{background:var(--cyan);border-color:#0891b2}
+.df button.indigo.active{background:var(--indigo);border-color:#4338ca}
+.df button.rose.active{background:var(--rose);border-color:#be123c}
+/* Group header row */
+.group-row td{background:#dcfce7;border-bottom:2px solid #bbf7d0;font-weight:900;text-transform:uppercase;color:#14532d;text-align:center;font-size:12px;padding:10px}
+/* Toast */
+.toast{
+position:fixed;right:18px;bottom:18px;
+background:#0b1220;color:#fff;border:1px solid rgba(255,255,255,.12);
+padding:10px 12px;border-radius:14px;display:none;gap:10px;align-items:center;
+box-shadow:0 14px 30px rgba(0,0,0,.25);z-index:200
+}
+.toast.show{display:flex}
+.toast .dot{width:10px;height:10px;border-radius:999px;background:#10b981}
+.spinner{width:32px;height:32px;border-radius:999px;border:3px solid #cbd5e1;border-top-color:#64748b;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Estado de Uso Modal Styles */
+.estado-row{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s ease;touch-action:manipulation}
+.estado-row:hover{background:#f1f5f9}
+.estado-row.selected{background:#fffbeb;border-color:#fde68a;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.estado-code{width:50px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc;padding:6px;border-radius:6px}
+.estado-desc{flex:1;font-weight:600}
+.estado-def{flex:2;font-size:11px;color:#64748b}
+.mandatory{color:#e11d48;font-weight:900;margin-left:4px}
+.sap-in.mandatory{border:2px solid #e11d48;background:#fef2f2}
+/* Categoria Modal Styles */
+.categoria-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s ease;touch-action:manipulation}
+.categoria-row:hover{background:#f1f5f9}
+.categoria-row.selected{background:#fffbeb;border-color:#fde68a;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.categoria-code{width:60px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc;padding:6px;border-radius:6px}
+.categoria-desc{flex:1;font-weight:600}
+/* Clasificación Modal Styles */
+.clas-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s ease;touch-action:manipulation}
+.clas-row:hover{background:#f1f5f9}
+.clas-row.selected{background:#fffbeb;border-color:#fde68a;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.clas-code{width:70px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc;padding:6px;border-radius:6px}
+.clas-desc{flex:1;font-weight:600}
+.sap-row-label{font-size:11px;font-weight:900;color:#003366}
+.sap-value-desc{font-size:11px;color:#334155;margin-left:8px;font-weight:600}
+/* Pais Origen Modal */
+.pais-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s ease;touch-action:manipulation}
+.pais-row:hover{background:#f1f5f9}
+.pais-row.selected{background:#fffbeb;border-color:#fde68a;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.pais-code{width:50px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc;padding:6px;border-radius:6px}
+.pais-desc{flex:1;font-weight:600}
+/* Acreedor Modal */
+.acreedor-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s ease;touch-action:manipulation}
+.acreedor-row:hover{background:#f1f5f9}
+.acreedor-row.selected{background:#fffbeb;border-color:#fde68a;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.acreedor-code{width:120px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc;padding:6px;border-radius:6px}
+.acreedor-desc{flex:1;font-weight:600}
+/* Indicador Propiedad Modal */
+.ip-search{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:none;font-size:16px;margin-bottom:12px;-webkit-appearance:none}
+.ip-search:focus{box-shadow:0 0 0 3px rgba(0,51,102,.15);border-color:var(--sap-blue)}
+.ip-search-wrap{position:relative}
+.ip-search-wrap .sicon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none}
+.ip-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s ease;touch-action:manipulation}
+.ip-row:hover{background:#f1f5f9}
+.ip-row.selected{background:#fffbeb;border-color:#fde68a;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.ip-code{width:50px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc;padding:6px;border-radius:6px;font-size:13px}
+.ip-desc{flex:1;font-weight:600;font-size:12px}
+.ip-count{font-size:11px;color:#64748b;margin-left:8px}
+/* Marco Normativo Styles */
+.normativo-content{max-width:1200px;margin:0 auto}
+.normativo-section{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 4px 12px rgba(2,6,23,.06)}
+.normativo-title{font-size:16px;font-weight:900;color:var(--sap-blue);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--amber);display:flex;align-items:center;gap:10px}
+.normativo-subtitle{font-size:13px;font-weight:900;color:#1e3a8a;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
+.normativo-text{font-size:12px;color:#334155;line-height:1.7;margin-bottom:10px}
+.normativo-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px;overflow-x:auto;display:block}
+.normativo-table thead,.normativo-table tbody{display:table;width:100%;table-layout:fixed}
+.normativo-table th,.normativo-table td{border:1px solid var(--border);padding:10px 12px;text-align:left}
+.normativo-table th{background:#f1f5f9;font-weight:900;color:#1e3a8a;font-size:11px;text-transform:uppercase}
+.normativo-table tr:hover{background:#f8fafc}
+.normativo-table .code-col{width:80px;text-align:center;font-weight:900;font-family:monospace;background:#f8fafc}
+.normativo-table .desc-col{font-weight:600}
+.normativo-highlight{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px;margin:12px 0}
+.normativo-highlight-title{font-weight:900;color:#92400e;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.normativo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.normativo-card{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:14px}
+.normativo-card-title{font-weight:900;color:#1e3a8a;margin-bottom:8px;font-size:12px}
+.normativo-card-text{font-size:11px;color:#475569;line-height:1.6}
+.info-box{background:#ecfeff;border:1px solid #cffafe;border-radius:10px;padding:14px;margin:12px 0}
+.info-box-title{font-weight:900;color:#0e7490;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.info-box-text{font-size:12px;color:#164e63;line-height:1.6}
+/* ==================== */
+/* NUEVAS MEJORAS */
+/* ==================== */
+/* Welcome Modal */
+.welcome-modal{max-width:800px}
+.welcome-hero{background:linear-gradient(135deg,var(--sap-blue),var(--indigo));padding:40px 30px;color:#fff;text-align:center}
+.welcome-hero h2{margin:0 0 10px;font-size:28px;font-weight:900}
+.welcome-hero p{margin:0;opacity:.9;font-size:14px}
+.welcome-features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:30px}
+.welcome-feature{text-align:center;padding:20px;background:#f8fafc;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .2s ease;touch-action:manipulation}
+.welcome-feature:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.1);border-color:var(--amber)}
+.welcome-feature .icon{font-size:32px;margin-bottom:10px}
+.welcome-feature h4{margin:0 0 8px;font-size:13px;font-weight:900;color:var(--sap-blue)}
+.welcome-feature p{margin:0;font-size:11px;color:#64748b;line-height:1.5}
+.welcome-footer{padding:20px 30px;background:#f1f5f9;border-top:1px solid var(--border);display:flex;justify-content:center;gap:12px;flex-shrink:0}
+.dont-show{display:flex;align-items:center;gap:8px;font-size:11px;color:#64748b}
+.welcome-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:0;color:#fff;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;touch-action:manipulation}
+.welcome-close:hover{background:rgba(255,255,255,.3)}
+/* Quick Actions - Simplified */
+.quick-actions{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:10px;z-index:100}
+.qa-btn{width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:transform .2s ease,box-shadow .2s ease;touch-action:manipulation;-webkit-appearance:none}
+.qa-btn:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.qa-btn.help{background:linear-gradient(135deg,var(--cyan),var(--indigo));color:#fff}
+.qa-btn .tooltip-text{position:absolute;right:60px;background:#1e293b;color:#fff;padding:6px 10px;border-radius:6px;font-size:11px;white-space:nowrap;opacity:0;visibility:hidden;transition:all .2s ease}
+.qa-btn:hover .tooltip-text{opacity:1;visibility:visible}
+/* Tooltip */
+.tooltip{position:relative}
+.tooltip::after{
+content:attr(data-tip);
+position:absolute;
+bottom:100%;
+left:50%;
+transform:translateX(-50%);
+background:#1e293b;
+color:#fff;
+padding:6px 10px;
+border-radius:6px;
+font-size:11px;
+white-space:nowrap;
+opacity:0;
+visibility:hidden;
+transition:all .2s ease;
+z-index:1000;
+pointer-events:none;
+}
+.tooltip:hover::after{opacity:1;visibility:visible;bottom:calc(100% + 8px)}
+/* Keyboard Shortcuts Modal */
+.shortcuts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.shortcut-item{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border-radius:8px;border:1px solid var(--border)}
+.shortcut-keys{display:flex;gap:6px}
+.kbd{background:#e2e8f0;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:900;font-family:monospace}
+/* Loading Overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.9);display:none;align-items:center;justify-content:center;z-index:1000}
+.loading-overlay.show{display:flex}
+.loading-content{text-align:center}
+.loading-content .spinner{width:48px;height:48px;margin:0 auto 16px}
+.loading-content p{font-size:13px;font-weight:900;color:var(--sap-blue)}
+/* Print Styles */
+@media print{
+.sidebar,.topbar,.quick-actions,.toast,.modal-back{display:none!important}
+.main{margin:0;padding:0}
+.content{padding:10px}
+.sap-wrap{max-width:100%}
+}
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease}
+/* Responsive Design */
+@media(max-width:768px){
+.sidebar{position:fixed;left:-256px;height:100%;z-index:100}
+.sidebar.open{left:0}
+.sidebar.compact{left:-80px}
+.main{margin-left:0}
+.topbar{padding:0 12px}
+.h-title{font-size:11px;max-width:200px}
+.content{padding:12px}
+.sap-wrap{max-width:100%;padding:0 12px}
+.sap-row{flex-wrap:wrap}
+.sap-row .lab{width:100%;text-align:left;margin-bottom:4px}
+.sap-row .grow{width:100%}
+.tabbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+.tabbtn{white-space:nowrap;flex-shrink:0}
+.welcome-features{grid-template-columns:1fr;gap:12px;padding:20px}
+.welcome-hero{padding:24px 16px}
+.welcome-hero h2{font-size:20px}
+.modal{max-width:95%;margin:10px}
+.m-body{padding:12px}
+.normativo-grid{grid-template-columns:1fr}
+.quick-actions{bottom:16px;right:16px}
+.qa-btn{width:50px;height:50px;font-size:20px}
+.chipbar{gap:6px}
+.chip{padding:8px 10px;font-size:10px}
+.df{gap:6px}
+.df button{padding:8px 12px;font-size:11px}
+.searchwrap input{font-size:16px;padding:10px 12px 10px 36px}
+.sb-author{padding:12px 10px;font-size:9px}
+.welcome-close{top:12px;right:12px;width:28px;height:28px;font-size:16px}
+}
+@media(max-width:480px){
+.sb-title h1{font-size:14px}
+.sb-title span{font-size:9px}
+.h-title{font-size:10px;max-width:150px}
+.sap-in{font-size:12px;padding:4px 6px}
+.sap-box{padding:12px 10px 8px}
+.tabbtn{font-size:10px;padding:6px 10px}
+.btn{padding:8px 12px;font-size:11px}
+.welcome-hero{padding:20px 12px}
+.welcome-hero h2{font-size:18px}
+.welcome-features{padding:16px;gap:10px}
+.welcome-feature{padding:16px}
+.welcome-footer{padding:16px}
+}
+/* Empty State */
+.empty-state{text-align:center;padding:60px 20px}
+.empty-state .icon{font-size:48px;margin-bottom:16px;opacity:.5}
+.empty-state h3{margin:0 0 8px;font-size:16px;font-weight:900;color:#475569}
+.empty-state p{margin:0;font-size:12px;color:#64748b}
+/* Help Panel */
+.help-panel{max-width:900px}
+.help-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.help-card{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:16px}
+.help-card h4{margin:0 0 8px;font-size:13px;font-weight:900;color:var(--sap-blue);display:flex;align-items:center;gap:8px}
+.help-card p{margin:0;font-size:11px;color:#475569;line-height:1.6}
+.help-steps{counter-reset:step}
+.help-step{position:relative;padding-left:30px;margin-bottom:12px}
+.help-step::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:0;width:22px;height:22px;background:var(--amber);color:#0b1220;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+/* iOS Specific Fixes */
+@supports (-webkit-touch-callout: none) {
+  .app { height: -webkit-fill-available; }
+  .modal-back { position: fixed; }
+  .sap-tabs { min-height: 400px; }
+  input, select, textarea { font-size: 16px !important; }
+}
+
+/* ========================= */
+/* LOGIN SCREEN              */
+/* ========================= */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--nav);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  font-family:Segoe UI,Tahoma,sans-serif;
+}
+.login-card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;
+  padding:40px 36px;
+  width:100%;max-width:380px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  text-align:center;
+}
+.login-logo{
+  background:var(--amber);
+  color:var(--nav);
+  width:56px;height:56px;
+  border-radius:16px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:900;
+  margin-bottom:18px;
+  box-shadow:0 8px 20px rgba(245,158,11,.35);
+}
+.login-title{
+  margin:0 0 4px;
+  font-size:22px;font-weight:900;
+  color:var(--amber);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.login-subtitle{
+  margin:0 0 28px;
+  font-size:11px;color:#94a3b8;
+  font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+}
+.login-label{
+  display:block;text-align:left;
+  font-size:11px;font-weight:900;
+  color:#94a3b8;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.login-input{
+  width:100%;
+  padding:13px 16px;
+  border:1.5px solid rgba(255,255,255,.18);
+  border-radius:12px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:16px;
+  font-family:Segoe UI,Tahoma,sans-serif;
+  outline:none;
+  -webkit-appearance:none;
+  transition:border-color .2s ease,box-shadow .2s ease;
+  margin-bottom:10px;
+  letter-spacing:.1em;
+}
+.login-input::placeholder{color:rgba(255,255,255,.3)}
+.login-input:focus{
+  border-color:var(--amber);
+  box-shadow:0 0 0 3px rgba(245,158,11,.22);
+}
+.login-btn{
+  width:100%;
+  padding:14px;
+  background:linear-gradient(90deg,var(--amber),#fbbf24);
+  color:#0b1220;
+  border:0;
+  border-radius:12px;
+  font-size:15px;font-weight:900;
+  cursor:pointer;
+  margin-top:8px;
+  box-shadow:0 8px 20px rgba(245,158,11,.30);
+  transition:filter .15s ease,transform .15s ease;
+  -webkit-appearance:none;
+  touch-action:manipulation;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.login-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.login-btn:active{transform:translateY(0)}
+.login-error{
+  background:rgba(225,29,72,.15);
+  border:1px solid rgba(225,29,72,.45);
+  color:#fca5a5;
+  font-size:12px;font-weight:700;
+  padding:10px 14px;
+  border-radius:10px;
+  margin-bottom:12px;
+  display:none;
+  text-align:center;
+  animation:fadeIn .25s ease;
+}
+.login-error.show{display:block}
+.login-shake{animation:shake .4s ease}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
+@media(max-width:480px){
+  .login-card{padding:30px 22px}
+  .login-title{font-size:19px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">🛸</div>
+    <h1 class="login-title">DILOG MDN</h1>
+    <p class="login-subtitle">Drones C-UAS · Acceso Restringido</p>
+    <div id="loginError" class="login-error" role="alert">
+      ⚠️ Contraseña incorrecta. Intente de nuevo.
+    </div>
+    <label class="login-label" for="loginPass">Contraseña</label>
+    <input
+      id="loginPass"
+      class="login-input"
+      type="password"
+      placeholder="Ingrese su contraseña"
+      autocomplete="current-password"
+      autofocus
+    >
+    <button class="login-btn" id="loginBtn">🔓 Ingresar</button>
+  </div>
+</div>
+<!-- ===== /LOGIN SCREEN ===== -->
+
+
+<div class="app">
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar">
+<div class="sb-header">
+<div class="logo">🛸</div>
+<div class="sb-title">
+<h1>DILOG MDN</h1>
+<span>Drones C-UAS</span>
+</div>
+</div>
+<nav class="sb-nav">
+<button class="sb-btn active" data-tab="sap"><span class="ic">🧩</span><span>Datos Maestros</span></button>
+<button class="sb-btn" data-tab="cuentas"><span class="ic">📚</span><span>Catálogo Cuentas</span></button>
+<button class="sb-btn" data-tab="drones"><span class="ic">✈️</span><span>Homologación Drones</span></button>
+<button class="sb-btn" data-tab="normativo"><span class="ic">📋</span><span>Marco Normativo</span></button>
+</nav>
+<!-- Author Credit - Sidebar Bottom -->
+<div class="sb-author">
+<span class="highlight">Elaborado por Ing. Walter Colorado</span>
+<span class="ai">🤖 con asistencia de IA</span>
+</div>
+</aside>
+<!-- Main -->
+<main class="main">
+<header class="topbar">
+<div class="topbar-left">
+<button id="btnSidebar" class="iconbtn tooltip" data-tip="Mostrar/Ocultar menú" title="Mostrar/Ocultar menú">☰</button>
+<h2 id="headerTitle" class="h-title">Transacción AS02: Modificar Activo Fijo</h2>
+</div>
+<div class="topbar-right" id="topbarRight"></div>
+</header>
+<div class="content">
+<!-- SAP -->
+<section id="viewSap" class="sap-wrap"></section>
+<!-- Cuentas -->
+<section id="viewCuentas" style="display:none"></section>
+<!-- Drones -->
+<section id="viewDrones" style="display:none"></section>
+<!-- Marco Normativo -->
+<section id="viewNormativo" style="display:none"></section>
+</div>
+</main>
+<!-- Quick Actions - Only Help Button -->
+<div class="quick-actions">
+<button class="qa-btn help" id="qaHelp" title="Ayuda">
+❓
+<span class="tooltip-text">Centro de Ayuda</span>
+</button>
+</div>
+<!-- Welcome Modal -->
+<div id="welcomeBack" class="modal-back">
+<div class="modal welcome-modal">
+<button class="welcome-close" id="welcomeCloseBtn" title="Cerrar">✕</button>
+<div class="welcome-hero">
+<h2>👋 Bienvenido a DILOG MDN</h2>
+<p>Sistema de Gestión de Activos Fijos - UAS/RPAS y C-UAS</p>
+</div>
+<div class="welcome-features">
+<div class="welcome-feature" data-tab="sap">
+<div class="icon">🧩</div>
+<h4>Datos Maestros</h4>
+<p>Gestión completa de activos fijos con interfaz SAP</p>
+</div>
+<div class="welcome-feature" data-tab="cuentas">
+<div class="icon">📊</div>
+<h4>Catálogo Cuentas</h4>
+<p>Consulta y filtrado de cuentas contables</p>
+</div>
+<div class="welcome-feature" data-tab="drones">
+<div class="icon">✈️</div>
+<h4>Homologación</h4>
+<p>Tabla de drones UAS, RPAS y C-UAS</p>
+</div>
+<div class="welcome-feature" data-tab="normativo">
+<div class="icon">📋</div>
+<h4>Marco Normativo</h4>
+<p>Documentación y guías oficiales</p>
+</div>
+<div class="welcome-feature" id="welcomeWizard">
+<div class="icon">🪄</div>
+<h4>Asistente</h4>
+<p>Auto-llenado inteligente de formularios</p>
+</div>
+<div class="welcome-feature" id="welcomeHelp">
+<div class="icon">⌨️</div>
+<h4>Ayuda</h4>
+<p>Guía de uso y consejos</p>
+</div>
+</div>
+<div class="welcome-footer">
+<label class="dont-show">
+<input type="checkbox" id="dontShowWelcome">
+No mostrar nuevamente
+</label>
+<button class="btn primary" id="welcomeStart">Comenzar</button>
+</div>
+</div>
+</div>
+<!-- Help Modal -->
+<div id="helpBack" class="modal-back">
+<div class="modal help-panel">
+<div class="m-head" style="background:linear-gradient(135deg,var(--cyan),var(--indigo))">
+<div class="ttl">❓ Centro de Ayuda</div>
+<button class="m-x" id="helpClose">✕</button>
+</div>
+<div class="m-body">
+<div class="help-grid">
+<div class="help-card">
+<h4>📖 Guía Rápida</h4>
+<p>Complete los campos obligatorios marcados con <span style="color:#e11d48;font-weight:900">*</span>. Use el asistente para auto-llenar formularios.</p>
+</div>
+<div class="help-card">
+<h4>🔍 Búsquedas</h4>
+<p>Use Ctrl+K para búsqueda rápida en catálogos. Los campos con lupa tienen búsqueda asistida.</p>
+</div>
+<div class="help-card">
+<h4>💾 Guardar</h4>
+<p>Ctrl+S para guardar cambios. Los datos se aplican al formulario SAP inmediatamente.</p>
+</div>
+<div class="help-card">
+<h4>📱 Móvil</h4>
+<p>La aplicación es responsiva. Use el menú ☰ para navegar en dispositivos móviles.</p>
+</div>
+</div>
+<div class="normativo-section" style="margin-top:16px">
+<div class="normativo-title">🎯 Flujo de Trabajo</div>
+<div class="help-steps">
+<div class="help-step"><strong>Seleccionar Tipo de Equipo:</strong> Use el asistente o seleccione manualmente en la pestaña General</div>
+<div class="help-step"><strong>Completar Ubicación:</strong> Seleccione categoría y centro de coste</div>
+<div class="help-step"><strong>Clasificación:</strong> Complete los 4 campos obligatorios de clasificación</div>
+<div class="help-step"><strong>Origen e Info Patrimonio:</strong> Complete fabricante, país e indicador de propiedad</div>
+</div>
+</div>
+<div class="info-box">
+<div class="info-box-title">💡 Consejos</div>
+<div class="info-box-text">• Use el asistente para ahorrar tiempo<br>• Revise el marco normativo para dudas de clasificación<br>• Los campos con lupa tienen búsqueda asistida<br>• F1 abre este panel de ayuda en cualquier momento</div>
+</div>
+</div>
+<div class="m-foot">
+<button class="btn dark" id="helpOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+<div class="loading-content">
+<div class="spinner"></div>
+<p id="loadingText">Procesando...</p>
+</div>
+</div>
+<!-- Wizard Modal -->
+<div id="wizardBack" class="modal-back">
+<div class="modal">
+<div class="m-head" style="background:linear-gradient(90deg,#0d1242,#1a237e)">
+<div class="ttl">✨ <span>Asistente de Ingreso Drones / C-UAS</span></div>
+<button class="m-x" id="wizardClose">✕</button>
+</div>
+<div class="m-body" id="wizardBody"></div>
+<div class="m-foot">
+<button class="btn ghost" id="wizardCancel">Cancelar</button>
+<button class="btn primary" id="wizardApply">💾 Aplicar Datos a SAP</button>
+</div>
+</div>
+</div>
+<!-- Estado Uso Modal -->
+<div id="estadoBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#475569">
+<div class="ttl">📌 <span>Estado de Uso</span></div>
+<button class="m-x" id="estadoClose">✕</button>
+</div>
+<div class="m-body" id="estadoBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="estadoOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Categoria Modal -->
+<div id="categoriaBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">📂 <span>Categoría</span></div>
+<button class="m-x" id="categoriaClose">✕</button>
+</div>
+<div class="m-body" id="categoriaBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="categoriaOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Inm Est Modal -->
+<div id="inmEstBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">🏠 <span>Inm est Mode Raza</span></div>
+<button class="m-x" id="inmEstClose">✕</button>
+</div>
+<div class="m-body" id="inmEstBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="inmEstOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Marca Sexo Modal -->
+<div id="marcaSexoBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">🏷️ <span>Ubicación Marca Sexo</span></div>
+<button class="m-x" id="marcaSexoClose">✕</button>
+</div>
+<div class="m-body" id="marcaSexoBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="marcaSexoOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Color Modal -->
+<div id="colorBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">🎨 <span>Tipo Inmueble Color</span></div>
+<button class="m-x" id="colorClose">✕</button>
+</div>
+<div class="m-body" id="colorBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="colorOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Tipo Bien Modal -->
+<div id="tipoBienBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">📋 <span>Tipo Esta Bien Inmu</span></div>
+<button class="m-x" id="tipoBienClose">✕</button>
+</div>
+<div class="m-body" id="tipoBienBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="tipoBienOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Pais Origen Modal -->
+<div id="paisBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">🌍 <span>País Origen</span></div>
+<button class="m-x" id="paisClose">✕</button>
+</div>
+<div class="m-body" id="paisBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="paisOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Acreedor Modal -->
+<div id="acreedorBack" class="modal-back">
+<div class="modal small">
+<div class="m-head" style="background:#003366">
+<div class="ttl">💼 <span>Acreedor</span></div>
+<button class="m-x" id="acreedorClose">✕</button>
+</div>
+<div class="m-body" id="acreedorBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="acreedorOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Indicador Propiedad Modal -->
+<div id="ipBack" class="modal-back">
+<div class="modal large">
+<div class="m-head" style="background:#0066cc">
+<div class="ttl">📊 <span>Indicador de Propiedad</span></div>
+<button class="m-x" id="ipClose">✕</button>
+</div>
+<div class="m-body" id="ipBody"></div>
+<div class="m-foot">
+<button class="btn dark" id="ipOk">Cerrar</button>
+</div>
+</div>
+</div>
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"><span class="dot"></span><span id="toastText"></span></div>
+</div>
+<script>
+// =========================
+// UTILIDADES CENTRALIZADAS
+// =========================
+const qs = (sel, root = document) => root.querySelector(sel);
+const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+// Debounce para búsquedas
+function debounce(fn, delay = 300) {
+let timer = null;
+return (...args) => {
+clearTimeout(timer);
+timer = setTimeout(() => fn(...args), delay);
+};
+}
+// Render batch con requestAnimationFrame
+let renderScheduled = false;
+function scheduleRender() {
+if (renderScheduled) return;
+renderScheduled = true;
+requestAnimationFrame(() => {
+render();
+renderScheduled = false;
+});
+}
+// Modal helpers
+function openModal(modalId) {
+const modal = qs(modalId);
+if (modal) modal.classList.add('show');
+}
+function closeModal(modalId) {
+const modal = qs(modalId);
+if (modal) modal.classList.remove('show');
+}
+// Toast con aria-live
+function toast(msg) {
+const t = qs("#toast");
+qs("#toastText").textContent = msg;
+t.classList.add("show");
+clearTimeout(toast._t);
+toast._t = setTimeout(() => t.classList.remove("show"), 1800);
+}
+// Copiar al portapapeles
+async function copyToClipboard(text) {
+try {
+await navigator.clipboard.writeText(text);
+} catch (e) {
+const el = document.createElement("textarea");
+el.value = text;
+document.body.appendChild(el);
+el.select();
+document.execCommand("copy");
+document.body.removeChild(el);
+}
+state.copiedCode = text;
+toast("Copiado: " + text);
+setTimeout(() => { if (state.copiedCode === text) { state.copiedCode = null; scheduleRender(); } }, 1400);
+}
+// =========================
+// DATA (sin duplicados)
+// =========================
+const dronesData = [
+{
+grupo: "UAS",
+grupoDesc: "Sistemas de aeronaves no tripuladas",
+categorias: [
+{ nombre: "UAS Multirrotor", sap: "28", items: [
+{ tipo: "Clase I-IA", sapTipo: "26", denom: "UAS CLASE I-IA MULTIRROTOR" },
+{ tipo: "Clase I-IB", sapTipo: "27", denom: "UAS CLASE I-IB MULTIRROTOR" }
+]},
+{ nombre: "UAS Ala fija", sap: "33", items: [
+{ tipo: "Clase I-IA", sapTipo: "26", denom: "UAS CLASE I-IA ALA FIJA" },
+{ tipo: "Clase I-IB", sapTipo: "27", denom: "UAS CLASE I-IB ALA FIJA" }
+]},
+{ nombre: "Accesorios UAS", sap: "Según categoria", items: [
+{ tipo: "Accesorio", sapTipo: "25", denom: "UAS ACCES-NOMBRE ACCESORIO" }
+]}
+]
+},
+{
+grupo: "RPAS",
+grupoDesc: "Sistemas de aeronaves tripuladas por control remoto",
+categorias: [
+{ nombre: "RPAS Multirrotor", sap: "30", items: [
+{ tipo: "Clase I-IC", sapTipo: "28", denom: "RPAS CLASE I-IC MULTIRROTOR" },
+{ tipo: "Clase II", sapTipo: "29", denom: "RPAS CLASE II - MULTIRROTOR" },
+{ tipo: "Clase III-MALE", sapTipo: "24", denom: "RPAS CLASE III - MALE MULTIRROTOR" },
+{ tipo: "Clase III-HALE", sapTipo: "23", denom: "RPAS CLASE III - HALE MULTIRROTOR" },
+{ tipo: "Clase III Strike/Combat", sapTipo: "22", denom: "RPAS CLASE III – MULTIRROTOR" }
+]},
+{ nombre: "RPAS Ala fija", sap: "34", items: [
+{ tipo: "Clase I-IC", sapTipo: "28", denom: "RPAS CLASE I-IC ALA FIJA" },
+{ tipo: "Clase II", sapTipo: "29", denom: "RPAS CLASE II - ALA FIJA" },
+{ tipo: "Clase III-MALE", sapTipo: "24", denom: "RPAS CLASE III - MALE ALA FIJA" },
+{ tipo: "Clase III-HALE", sapTipo: "23", denom: "RPAS CLASE III - HALE ALA FIJA" },
+{ tipo: "Clase III Strike/Combat", sapTipo: "22", denom: "RPAS CLASE III – ALA FIJA" }
+]},
+{ nombre: "Accesorios RPAS", sap: "Según categoria", items: [
+{ tipo: "Accesorio", sapTipo: "25", denom: "RPAS ACCES-NOMBRE ACCESORIO" }
+]}
+]
+},
+{
+grupo: "C-UAS",
+grupoDesc: "Sistema Contra Aeronaves No Tripuladas",
+categorias: [
+{ nombre: "C-UAS", sap: "7", items: [
+{ tipo: "C-UAS FIJO", sapTipo: "175", denom: "C-UAS FIJO" },
+{ tipo: "C-UAS SEMIFIJO", sapTipo: "176", denom: "C-UAS SEMIFIJO" },
+{ tipo: "C-UAS TÁCTICO", sapTipo: "177", denom: "C-UAS TÁCTICO" },
+{ tipo: "ACCES - DRON / C-UAS", sapTipo: "25", denom: "C-UAS ACCES-NOMBRE ACCESORIO" }
+]}
+]
+}
+];
+const clasesCuentaOpciones = [
+{ code: "16550900", desc: "Eq. Enseñanza", descLarga: "Equipo de Enseñanza" },
+{ code: "16552600", desc: "Eq Segur. y Resc", descLarga: "Equipo de seguridad y rescate" },
+{ code: "16552200", desc: "Eq Ayuda Audiovisual", descLarga: "Equipo Ayuda Audiovisual" },
+{ code: "16550200", desc: "Armamento y Eq", descLarga: "Armamento y Equipo Reservado" },
+{ code: "16551100", desc: "Herramientas y Acc", descLarga: "Herramientas y Accesorios" }
+];
+const estadosUso = [
+{ val: "0", desc: "A SATISFACCIÓN", def: "Cumple con todas las expectativas de rendimiento y funcionalidad." },
+{ val: "1", desc: "AVERIADO", def: "Falla que impide su uso normal y requiere reparación." },
+{ val: "2", desc: "PROCESO LEGAL", def: "Involucrado en algún proceso legal que impide su uso." },
+{ val: "3", desc: "EN DESUSO", def: "No está siendo utilizado actualmente." },
+{ val: "4", desc: "OBSOLETO", def: "Ya no cumple con requisitos tecnológicos actuales." },
+{ val: "5", desc: "EN MANTENIMIENTO", def: "En proceso de reparación, revisión o actualización." },
+{ val: "6", desc: "OPERATIVO", def: "Funcionando correctamente, listo para ser utilizado." }
+];
+const categoriasUbicacion = [
+{ code: "28", desc: "UAS MULTIRROTOR" },
+{ code: "30", desc: "RPAS MULTIRROTOR" },
+{ code: "33", desc: "UAS ALA FIJA" },
+{ code: "34", desc: "RPAS ALA FIJA" },
+{ code: "7", desc: "C-UAS" },
+];
+const inmEstModeRazaData = [
+{ val: "16", desc: "BUEN ESTADO" },
+{ val: "17", desc: "REGULAR ESTADO" },
+{ val: "18", desc: "MAL ESTADO" }
+];
+const ubicacionMarcaSexoData = [
+{ val: "9351", desc: "DJI" },
+{ val: "2224", desc: "HIDROMACK" },
+{ val: "9408", desc: "DJI AIR 2S" },
+{ val: "6603", desc: "DEDRONE" },
+{ val: "XXXX", desc: "Si la marca no existe, favor validar en el ERP o gestionar solicitud de creación" }
+];
+const tipoInmuebleColorData = [
+{ val: "100", desc: "Camuflado" }, { val: "101", desc: "Verde" }, { val: "102", desc: "Azul" },
+{ val: "103", desc: "Rojo" }, { val: "104", desc: "Negro" }, { val: "105", desc: "Blanco" },
+{ val: "106", desc: "Gris" }, { val: "107", desc: "Amarillo" }, { val: "108", desc: "Naranja" },
+{ val: "109", desc: "Violeta" }, { val: "110", desc: "Café" }, { val: "111", desc: "Vino tinto" },
+{ val: "112", desc: "Rosado" }, { val: "113", desc: "Plateado" }, { val: "114", desc: "Cromado" },
+{ val: "115", desc: "Pavonado" }, { val: "116", desc: "Beige" }, { val: "117", desc: "Opalizado" },
+{ val: "118", desc: "Gris y Azul" }
+];
+const tipoEstaBienInmuData = [
+{ val: "26", desc: "Clase I-IA" }, { val: "27", desc: "Clase I-IB" },
+{ val: "28", desc: "Clase I-IC" }, { val: "29", desc: "Clase II" }, { val: "24", desc: "Clase III-MALE" },
+{ val: "23", desc: "Clase III-HALE" }, { val: "22", desc: "Clase III Strike/Combat" },
+{ val: "25", desc: "ACCES - DRON / C-UAS" }, { val: "175", desc: "C-UAS FIJO" },
+{ val: "176", desc: "C-UAS SEMIFIJO" }, { val: "177", desc: "C-UAS TÁCTICO" }
+];
+// Países sin duplicados
+const paisesOrigenData = [
+{ code: "CN", desc: "China" }, { code: "US", desc: "Estados Unidos" }, { code: "DE", desc: "Alemania" },
+{ code: "FR", desc: "Francia" }, { code: "GB", desc: "Reino Unido" }, { code: "JP", desc: "Japón" },
+{ code: "KR", desc: "Corea del Sur" }, { code: "IL", desc: "Israel" }, { code: "BR", desc: "Brasil" },
+{ code: "CO", desc: "Colombia" },
+{ code: "OTROS", desc: "Para cualquier otro país, consúltelo directamente en el ERP" }
+];
+// Acreedores sin duplicados
+const acreedoresData = [
+{ code: "8300512XX", desc: "GEOSYSTEM INGENIERIA SAS" },
+{ code: "9003939XX", desc: "DJI TECHNOLOGY CO LTD" },
+{ code: "8301234XX", desc: "AUTEL ROBOTICS" },
+{ code: "8307890XX", desc: "PARROT DRONES SAS" },
+{ code: "8304567XX", desc: "IMPORTADORA DE DRONES SAS" },
+{ code: "VALIDAR", desc: "El proveedor debe validarse y seleccionarse en el ERP; si no se encuentra, gestione la solicitud de creación" }
+];
+const indicadorPropiedadData = [
+{ code: "-", desc: "Propio" }, { code: "¿", desc: "Por legalizar" }, { code: '"', desc: "Bienes Inteligencia Militar" },
+{ code: "(", desc: "Nacido" }, { code: ")", desc: "Offset" }, { code: "[", desc: "Cooperación Internacional HAP" },
+{ code: "@", desc: "Convenios" }, { code: "*", desc: "Cooperación Internacional CTFP" }, { code: "/", desc: "Sobrantes" },
+{ code: "&", desc: "LOAS - Presupuesto Nacional" }, { code: "#", desc: "Cooperación Internacional 333" },
+{ code: "%", desc: "Cooperación Internacional INL" }, { code: "+", desc: "Cooperación Internacion ODHACA" },
+{ code: "<", desc: "Permiso de ocupación" }, { code: "=", desc: "APC - Ag. Presid. Cop. Int Col" },
+{ code: ">", desc: "Organismos Internacionales" }, { code: "$", desc: "Bienes recibidos dación pago" },
+{ code: "0", desc: "Sentencia Judicial" }, { code: "1", desc: "Adjudicación" }, { code: "2", desc: "Reserva" },
+{ code: "3", desc: "Destinación Terrenos Baldíos" }, { code: "4", desc: "Asignación" },
+{ code: "5", desc: "Cooperación Internacional ORA" }, { code: "6", desc: "Cooperación Internacional DEA" },
+{ code: "8", desc: "LOAS - Cooperación FMF" }, { code: "9", desc: "Cooperación Internacional IMET" },
+{ code: "A", desc: "Comprado Presupuesto Nacional" }, { code: "B", desc: "Comprado Fondo Interno" },
+{ code: "C", desc: "Arrendado" }, { code: "D", desc: "En Comodato" }, { code: "E", desc: "En Proceso Legal" },
+{ code: "É", desc: "284 (c)" }, { code: "F", desc: "Incautado DNE" }, { code: "G", desc: "Incautado Otras Autoridades" },
+{ code: "H", desc: "Donados Nacionales" }, { code: "I", desc: "Donados Coop. Internacional" },
+{ code: "J", desc: "Comodatos Coop. Internacional" }, { code: "K", desc: "Bienestar Social" },
+{ code: "L", desc: "Cooperación Internacional DOD" }, { code: "M", desc: "Indemnización" },
+{ code: "N", desc: "Bienes de gastos reservados" }, { code: "Ñ", desc: "Permuta" }, { code: "O", desc: "Donados DIAN" },
+{ code: "Ó", desc: "EDA" }, { code: "P", desc: "Bs.Uso Perma. Sin Contrapresta" },
+{ code: "Q", desc: "Bienes Colombia Humanitaria" }, { code: "R", desc: "Bs Fabricado FAC" },
+{ code: "S", desc: "Bs Fondo Cta Ley 418/93" }, { code: "T", desc: "Bs. Depto Activo Seguridad DAS" },
+{ code: "U", desc: "Bs Fabricado EJC" }, { code: "Ú", desc: "Donados Enti Gob Gral/Emp Públ" },
+{ code: "V", desc: "Fondo Defensa Técnica" }, { code: "W", desc: "Material Ingenieros" },
+{ code: "X", desc: "Cesión" }, { code: "Y", desc: "Transferencia a Título Gratuito" },
+{ code: "Z", desc: "Donados Particulares" }
+];
+const accountsData = [
+{ code: '1635010070', desc: 'En Bodega, Equipo de Enseñanza', cat: 'Enseñanza', sub: 'Bodega' },
+{ code: '1637070070', desc: 'No Explotados Equipo de Enseñanza', cat: 'Enseñanza', sub: 'No Explotados' },
+{ code: '1655090000', desc: 'Equipo de Enseñanza', cat: 'Enseñanza', sub: 'Operativo' },
+{ code: '1636050080', desc: 'En Mantenimiento, Equipo Enseñanza', cat: 'Enseñanza', sub: 'Mantenimiento' },
+{ code: '1635010130', desc: 'En Bodega, Equipo seguridad y rescate', cat: 'Seguridad', sub: 'Bodega' },
+{ code: '1637070150', desc: 'No Explotados Equipo seguridad y rescate', cat: 'Seguridad', sub: 'No Explotados' },
+{ code: '1655260000', desc: 'Equipo de seguridad y rescate', cat: 'Seguridad', sub: 'Operativo' },
+{ code: '1636050130', desc: 'En Mantenimiento, Equipo de seguridad y rescate', cat: 'Seguridad', sub: 'Mantenimiento' },
+{ code: '1635010120', desc: 'En Bodega, Equipo Ayuda Audiovisual', cat: 'Audiovisual', sub: 'Bodega' },
+{ code: '1637070018', desc: 'No Explotados Equipo Ayuda Audiovisual', cat: 'Audiovisual', sub: 'No Explotados' },
+{ code: '1655220000', desc: 'Equipo Ayuda Audiovisual', cat: 'Audiovisual', sub: 'Operativo' },
+{ code: '1636050120', desc: 'En Mantenimiento, Equipo Ayuda Audiovisual', cat: 'Audiovisual', sub: 'Mantenimiento' },
+{ code: '1635010020', desc: 'En Bodega, Armamento y Equipo Reservado', cat: 'Armamento', sub: 'Bodega' },
+{ code: '1655020010', desc: 'Armamento y Equipo Reservado', cat: 'Armamento', sub: 'Operativo' },
+{ code: '1637070020', desc: 'No Explotados Armamento y Equipo Reservado', cat: 'Armamento', sub: 'No Explotados' },
+{ code: '1636050020', desc: 'En Mantenimiento, Armamento y Equipo Reservado', cat: 'Armamento', sub: 'Mantenimiento' },
+{ code: '1655110000', desc: 'Herramientas y Accesorios', cat: 'Herramientas', sub: 'Operativo' }
+];
+const denominacionesList = [
+"UAS CLASE I-IA MULTIRROTOR", "UAS CLASE I-IA ALA FIJA", "UAS CLASE I-IB MULTIRROTOR",
+"UAS CLASE I-IB ALA FIJA", "UAS ACCES-NOMBRE ACCESORIO", "RPAS CLASE I-IC MULTIRROTOR",
+"RPAS CLASE I-IC ALA FIJA", "RPAS CLASE II - MULTIRROTOR", "RPAS CLASE II- ALA FIJA",
+"RPAS CLASE III - MALE MULTIRROTOR", "RPAS CLASE III - MALE ALA FIJA",
+"RPAS CLASE III - HALE MULTIRROTOR", "RPAS CLASE III - HALE ALA FIJA",
+"RPAS CLASE III – MULTIRROTOR", "RPAS ACCES-NOMBRE ACCESORIO", "C-UAS FIJO",
+"C-UAS SEMIFIJO", "C-UAS TÁCTICO", "C-UAS ACCES-NOMBRE ACCESORIO"
+];
+// =========================
+// MAPAS PARA BÚSQUEDAS RÁPIDAS
+// =========================
+const estadosMap = new Map(estadosUso.map(e => [e.val, e]));
+const categoriasMap = new Map(categoriasUbicacion.map(c => [c.code, c]));
+const paisesMap = new Map(paisesOrigenData.map(p => [p.code, p]));
+const acreedoresMap = new Map(acreedoresData.map(a => [a.code, a]));
+const ipMap = new Map(indicadorPropiedadData.map(ip => [ip.code, ip]));
+const inmEstMap = new Map(inmEstModeRazaData.map(i => [i.val, i]));
+const marcaSexoMap = new Map(ubicacionMarcaSexoData.map(m => [m.val, m]));
+const colorMap = new Map(tipoInmuebleColorData.map(c => [c.val, c]));
+const tipoBienMap = new Map(tipoEstaBienInmuData.map(t => [t.val, t]));
+const cuentasMap = new Map(clasesCuentaOpciones.map(c => [c.code, c]));
+// =========================
+// STATE CENTRALIZADO
+// =========================
+const state = {
+activeTab: "sap",
+sapSubTab: "General",
+sidebarOpen: true,
+filter: "Todos",
+search: "",
+copiedCode: null,
+dronesSearch: "",
+dronesFilter: "Todos",
+showWizard: false,
+showEstado: false,
+showCategoria: false,
+showInmEst: false,
+showMarcaSexo: false,
+showColor: false,
+showTipoBien: false,
+showPais: false,
+showAcreedor: false,
+showIP: false,
+showWelcome: false,
+showHelp: false,
+ipSearch: "",
+sapForm: {
+activoFijo: "165500032413",
+claseCodigo: "16552200",
+claseDescripcion: "Equip Ayuda Audiovis",
+claseDescripcionLarga: "Equipo Ayuda Audiovisual",
+sociedad: "7001",
+denominacion: "UAS SISTEMA AEREO REMOTAMENTE TRIPULADO",
+denomAdicional: "",
+serie: "",
+estadoUso: "6",
+categoria: "28",
+categoriaDesc: "UAS MULTIRROTOR",
+claseUbicacion: "16",
+inmEstModeRaza: "",
+inmEstModeRazaDesc: "",
+ubiMarcaSexo: "",
+ubiMarcaSexoDesc: "",
+tipoInmColor: "",
+tipoInmColorDesc: "",
+tipoEstaBienInmu: "",
+tipoEstaBienInmuDesc: "",
+estratoCodAlmacen: "EB8602",
+status: "BR",
+sistEq: "22",
+responsable: "",
+acreedor: "830051298",
+acreedorDesc: "GEOSYSTEM INGENIERIA SAS",
+fabricante: "SZ DJI Technology",
+afCompradoNuevo: true,
+comprado2Mano: false,
+paisOrigen: "CN",
+paisOrigenDesc: "China",
+ubicacion: "SIART COAGY",
+activoFijoOrig: "163500083940",
+altaEl: "31.12.2018",
+indicadorPropiedad: "A",
+indicadorPropiedadDesc: "Comprado Presupuesto Nacional"
+},
+wizardForm: {
+claseCuentaSel: "",
+grupoSel: "",
+categoriaSel: "",
+itemSel: "",
+denominacion: "",
+denomAdicional: "",
+serie: "",
+estadoUso: "",
+claseUbicacion: "",
+inmEstModeRaza: "",
+ubiMarcaSexo: "",
+tipoInmColor: "",
+tipoEstaBienInmu: ""
+}
+};
+// =========================
+// setState CENTRALIZADO
+// =========================
+function setState(updates, shouldRender = true) {
+Object.assign(state, updates);
+if (shouldRender) scheduleRender();
+}
+// =========================
+// FILTROS CON DEBOUNCE
+// =========================
+const debouncedAccountSearch = debounce((val) => {
+setState({ search: val });
+}, 300);
+const debouncedDroneSearch = debounce((val) => {
+setState({ dronesSearch: val });
+}, 300);
+const debouncedIPSearch = debounce((val) => {
+setState({ ipSearch: val });
+}, 300);
+// =========================
+// HELPERS
+// =========================
+function getFilteredCuentas() {
+if (!state.wizardForm.grupoSel || !state.wizardForm.itemSel) return [];
+const isAccessory =
+(state.wizardForm.categoriaSel || "").includes("Accesorio") ||
+(state.wizardForm.itemSel || "").includes("ACCES");
+if (isAccessory) return clasesCuentaOpciones.filter(c => c.descLarga.toLowerCase().includes("herramientas"));
+if (state.wizardForm.grupoSel === "C-UAS") return clasesCuentaOpciones.filter(c => c.descLarga.toLowerCase().includes("armamento"));
+if (state.wizardForm.grupoSel === "UAS" || state.wizardForm.grupoSel === "RPAS") {
+return clasesCuentaOpciones.filter(c =>
+c.descLarga.toLowerCase().includes("enseñanza") ||
+c.descLarga.toLowerCase().includes("seguridad") ||
+c.descLarga.toLowerCase().includes("audiovisual")
+);
+}
+return clasesCuentaOpciones;
+}
+function filteredAccounts() {
+const f = state.filter;
+const s = state.search.trim().toLowerCase();
+const out = accountsData.filter(it => {
+const matchesFilter = (f === "Todos") || it.cat === f;
+const matchesSearch = !s || it.code.toLowerCase().includes(s) || it.desc.toLowerCase().includes(s);
+return matchesFilter && matchesSearch;
+});
+return out.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
+}
+function filteredDrones() {
+const df = state.dronesFilter;
+const q = state.dronesSearch.trim().toLowerCase();
+return dronesData
+.filter(g => df === "Todos" || g.grupo === df)
+.map(g => {
+if (!q) return g;
+const cats = g.categorias.map(cat => {
+const catMatch = cat.nombre.toLowerCase().includes(q) || String(cat.sap).toLowerCase().includes(q);
+const items = cat.items.filter(i =>
+i.tipo.toLowerCase().includes(q) ||
+String(i.sapTipo).toLowerCase().includes(q) ||
+(i.denom || "").toLowerCase().includes(q)
+);
+if (catMatch) return cat;
+if (items.length) return { ...cat, items };
+return null;
+}).filter(Boolean);
+if (cats.length) return { ...g, categorias: cats };
+return null;
+})
+.filter(Boolean);
+}
+function filteredIP() {
+const s = state.ipSearch.trim().toLowerCase();
+if (!s) return indicadorPropiedadData;
+return indicadorPropiedadData.filter(ip =>
+ip.code.toLowerCase().includes(s) ||
+ip.desc.toLowerCase().includes(s)
+);
+}
+// =========================
+// NUEVAS FUNCIONES
+// =========================
+function showLoading(text = 'Procesando...') {
+qs("#loadingText").textContent = text;
+qs("#loadingOverlay").classList.add("show");
+}
+function hideLoading() {
+qs("#loadingOverlay").classList.remove("show");
+}
+function checkWelcome() {
+const skipped = localStorage.getItem('dilog_welcome_skipped');
+if (!skipped) setState({ showWelcome: true }, false);
+}
+function navigateTo(tab) {
+setState({ activeTab: tab });
+if (window.innerWidth <= 768) qs("#sidebar").classList.remove("open");
+scheduleRender();
+}
+// =========================
+// EVENT DELEGATION
+// =========================
+function setupEventDelegation() {
+// Sidebar navigation
+qs(".sb-nav").addEventListener('click', (e) => {
+const btn = e.target.closest('.sb-btn');
+if (btn) {
+setState({ activeTab: btn.dataset.tab });
+if (window.innerWidth <= 768) qs("#sidebar").classList.remove("open");
+scheduleRender();
+}
+});
+// Chip filters
+document.addEventListener('click', (e) => {
+const chip = e.target.closest('.chip');
+if (chip && chip.dataset.filter) {
+setState({ filter: chip.dataset.filter });
+}
+const dfBtn = e.target.closest('.df button');
+if (dfBtn && dfBtn.dataset.df) {
+setState({ dronesFilter: dfBtn.dataset.df });
+}
+const copyBtn = e.target.closest('.copybtn');
+if (copyBtn && copyBtn.dataset.copy) {
+copyToClipboard(copyBtn.dataset.copy);
+}
+const tabBtn = e.target.closest('.tabbtn');
+if (tabBtn && tabBtn.dataset.subtab) {
+setState({ sapSubTab: tabBtn.dataset.subtab });
+}
+const welcomeFeature = e.target.closest('.welcome-feature');
+if (welcomeFeature && welcomeFeature.dataset.tab) {
+navigateTo(welcomeFeature.dataset.tab);
+setState({ showWelcome: false });
+if (qs("#dontShowWelcome").checked) localStorage.setItem('dilog_welcome_skipped', 'true');
+toast("Navegando a " + welcomeFeature.querySelector("h4").textContent);
+}
+});
+// Input events with delegation
+document.addEventListener('input', (e) => {
+if (e.target.id === 'accSearch') debouncedAccountSearch(e.target.value);
+if (e.target.id === 'drSearch') debouncedDroneSearch(e.target.value);
+if (e.target.id === 'ipSearchInput') debouncedIPSearch(e.target.value);
+});
+}
+// =========================
+// RENDERERS
+// =========================
+function renderTopbarRight() {
+const el = qs("#topbarRight");
+if (state.activeTab === "sap") {
+el.innerHTML = `<button class="assist-btn" id="btnOpenWizard" title="Abrir asistente para llenado rápido">🪄 Asistente de Ingreso</button>`;
+qs("#btnOpenWizard").onclick = () => setState({ showWizard: true });
+} else {
+el.innerHTML = "";
+}
+}
+function renderHeaderTitle() {
+const map = {
+sap: "Transacción AS02: Modificar Activo Fijo",
+cuentas: "Catálogo de Cuentas Oficial",
+drones: "Tabla de Homologación Drones",
+normativo: "Guía de Diligenciamiento - Marco Normativo"
+};
+qs("#headerTitle").textContent = map[state.activeTab] || "";
+}
+function renderSap() {
+const root = qs("#viewSap");
+const s = state.sapForm;
+root.innerHTML = `
+<div class="sap-head">
+<div class="sap-line">
+<span class="sap-lbl">Act.fijo</span>
+<input class="sap-in ro" style="width:120px" value="${esc(s.activoFijo)}" readonly>
+<input class="sap-in ro" style="width:40px;text-align:center;margin-left:6px" value="0" readonly>
+<span style="margin-left:10px;font-size:12px;color:#000">${esc(s.denominacion)}</span>
+</div>
+<div class="sap-line" style="justify-content:space-between">
+<div class="sap-line">
+<span class="sap-lbl">Clase</span>
+<input class="sap-in ro" style="width:120px" value="${esc(s.claseCodigo)}" readonly>
+<span style="margin-left:10px;font-size:12px;color:#000">${esc(s.claseDescripcion)}</span>
+</div>
+<div class="sap-line">
+<span class="sap-lbl" style="width:auto">Sociedad</span>
+<input class="sap-in ro" style="width:60px;text-align:center" value="${esc(s.sociedad)}" readonly>
+</div>
+</div>
+</div>
+<div class="sap-tabs">
+<div class="tabbar">
+${["General","Ubicación","Clasificación","Origen","Info Patrimonio","Valores Contables"].map(t => `
+<button class="tabbtn ${state.sapSubTab === t ? 'active' : ''}" data-subtab="${esc(t)}">${esc(t)}</button>
+`).join("")}
+</div>
+<div class="sap-body" id="sapBody"></div>
+</div>
+`;
+const body = qs("#sapBody", root);
+if (state.sapSubTab === "General") {
+const estadoDesc = estadosMap.get(s.estadoUso);
+const isEstadoMandatory = !s.estadoUso;
+body.innerHTML = `
+<div class="sap-box">
+<div class="cap">Datos generales</div>
+<div class="sap-row">
+<div class="lab">Denominación</div>
+<div class="grow">
+<select id="sap_denominacion" style="width:100%;font-weight:900;color:#1e3a8a;border:1px solid #7f9db9;padding:4px 6px;font-size:12px;border-radius:2px;outline:none">
+<option value="">Seleccione...</option>
+${denominacionesList.map(d => `<option value="${esc(d)}" ${s.denominacion === d ? 'selected' : ''}>${esc(d)}</option>`).join("")}
+</select>
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">Denominación Adicional</div>
+<div class="grow">
+<input class="sap-in" style="width:100%" id="sap_denomAdicional" value="${esc(s.denomAdicional)}">
+</div>
+</div>
+<div class="sap-row" style="margin-top:16px">
+<div class="lab">Determ.cuentas</div>
+<div class="grow" style="display:flex;align-items:center;gap:10px">
+<input class="sap-in ro" style="width:120px" value="${esc(s.claseCodigo)}" readonly>
+<small>${esc(s.claseDescripcionLarga)}</small>
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">Número de serie</div>
+<div class="grow">
+<input class="sap-in" style="width:250px" id="sap_serie" value="${esc(s.serie)}">
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">Número de inventario</div>
+<div class="grow">
+<input class="sap-in ro" style="width:50%" value="80040300000000003061365" readonly>
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">Cantidad</div>
+<input class="sap-in ro" style="width:60px;text-align:right" value="1" readonly>
+<input class="sap-in ro" style="width:50px;margin-left:6px" value="UN" readonly>
+<small style="margin-left:6px">Unidad</small>
+</div>
+</div>
+<div class="sap-box">
+<div class="cap">Información contabilización</div>
+<div class="sap-row">
+<div class="lab">Capitalizado el</div>
+<input class="sap-in ro" style="width:120px" value="10.07.2025" readonly>
+<div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+<small>Descapitalización el</small>
+<input class="sap-in ro" style="width:120px" value="" readonly>
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">Alta original el</div>
+<input class="sap-in ro" style="width:120px" value="10.07.2025" readonly>
+</div>
+<div class="sap-row">
+<div class="lab">Año de alta</div>
+<input class="sap-in ro" style="width:50px" value="2025" readonly>
+<input class="sap-in ro" style="width:50px" value="007" readonly>
+</div>
+</div>
+<div class="sap-box">
+<div class="cap">Inventario</div>
+<div class="sap-row">
+<div class="lab">Último inventario el</div>
+<input class="sap-in ro" style="width:120px" value="" readonly>
+<div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+<input type="checkbox" checked disabled>
+<small>Incluir AF en lista de inventario</small>
+</div>
+</div>
+<div class="sap-row" style="margin-top:12px">
+<div class="lab">Estado de uso<span class="mandatory">*</span></div>
+<input class="sap-in ${isEstadoMandatory ? 'mandatory' : ''}" style="width:100px" id="sap_estadoUso" value="${esc(s.estadoUso)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnEstadoModal" title="Buscar estado de uso">🔎</button>
+${estadoDesc ? `<small style="margin-left:6px;color:#059669;font-weight:900">${esc(estadoDesc.desc)}</small>` : ''}
+</div>
+</div>
+`;
+qs("#sap_denominacion", body).onchange = (e) => { state.sapForm.denominacion = e.target.value; };
+qs("#sap_denomAdicional", body).oninput = (e) => { state.sapForm.denomAdicional = e.target.value; };
+qs("#sap_serie", body).oninput = (e) => { state.sapForm.serie = e.target.value; };
+qs("#btnEstadoModal", body).onclick = () => setState({ showEstado: true });
+}
+else if (state.sapSubTab === "Ubicación") {
+const isCategoriaMandatory = !s.categoria;
+body.innerHTML = `
+<div style="font-weight:900;font-size:11px;color:var(--sap-blue);padding:6px 8px;border:1px solid var(--sap-border);border-bottom:0;background:var(--sap-bg)">
+Intervalo del 01.01.1900 hasta el 31.12.9999
+</div>
+<div style="border:1px solid var(--sap-border);background:#fcfcfc;padding:14px;box-shadow:0 4px 10px rgba(2,6,23,.06)">
+<div class="sap-row">
+<div class="lab">Centro de coste</div>
+<div class="grow" style="display:flex;align-items:center;gap:10px">
+<input class="sap-in ro" style="width:110px" value="3N2EL17035" readonly>
+<small>INTENDENCIA BDJOS</small>
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">Centro</div>
+<div class="grow" style="display:flex;align-items:center;gap:10px">
+<input class="sap-in ro" style="width:70px" value="EB30" readonly>
+<small>Batallón de ASPC No. 30</small>
+</div>
+</div>
+<div class="sap-row" style="margin-top:18px;padding-top:18px;border-top:1px solid var(--sap-border)">
+<div class="lab">Categoría<span class="mandatory">*</span></div>
+<div class="grow" style="display:flex;align-items:center;gap:8px">
+<input class="sap-in ${isCategoriaMandatory ? 'mandatory' : ''}" id="sap_categoria" style="width:60px;background:#fff5cc;font-weight:900" value="${esc(s.categoria)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnCategoriaModal" title="Buscar categoría">🔎</button>
+<small style="margin-left:6px;color:#059669;font-weight:900">${esc(s.categoriaDesc || "")}</small>
+</div>
+</div>
+<div class="sap-row" style="margin-top:12px">
+<div class="lab">Clasificación de la información</div>
+<div class="grow">
+<input class="sap-in" style="width:100px" id="sap_clasificacion" value="">
+</div>
+</div>
+</div>
+`;
+qs("#btnCategoriaModal", body).onclick = () => setState({ showCategoria: true });
+qs("#sap_clasificacion", body).oninput = (e) => { state.sapForm.clasificacionInfo = e.target.value; };
+}
+else if (state.sapSubTab === "Clasificación") {
+const inmDesc = inmEstMap.get(s.inmEstModeRaza)?.desc || "";
+const marDesc = marcaSexoMap.get(s.ubiMarcaSexo)?.desc || "";
+const colDesc = colorMap.get(s.tipoInmColor)?.desc || "";
+const bienDesc = tipoBienMap.get(s.tipoEstaBienInmu)?.desc || "";
+const isInmMandatory = !s.inmEstModeRaza;
+const isMarMandatory = !s.ubiMarcaSexo;
+const isColMandatory = !s.tipoInmColor;
+const isBienMandatory = !s.tipoEstaBienInmu;
+body.innerHTML = `
+<div class="sap-box">
+<div class="cap">Asignaciones</div>
+<div class="sap-row">
+<div class="lab">Inm estd Mode Raza<span class="mandatory">*</span></div>
+<input class="sap-in ${isInmMandatory ? 'mandatory' : ''}" id="sap_inm" style="width:70px" value="${esc(s.inmEstModeRaza)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnInmEstModal" title="Buscar">🔎</button>
+<span class="sap-value-desc">${esc(inmDesc)}</span>
+</div>
+<div class="sap-row">
+<div class="lab">Ubicación Marca Sexo<span class="mandatory">*</span></div>
+<input class="sap-in ${isMarMandatory ? 'mandatory' : ''}" id="sap_mar" style="width:70px" value="${esc(s.ubiMarcaSexo)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnMarcaSexoModal" title="Buscar">🔎</button>
+<span class="sap-value-desc">${esc(marDesc)}</span>
+</div>
+<div class="sap-row">
+<div class="lab">Tipo Inmueble Color<span class="mandatory">*</span></div>
+<input class="sap-in ${isColMandatory ? 'mandatory' : ''}" id="sap_col" style="width:70px" value="${esc(s.tipoInmColor)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnColorModal" title="Buscar">🔎</button>
+<span class="sap-value-desc">${esc(colDesc)}</span>
+</div>
+<div class="sap-row">
+<div class="lab">Tipo Esta Bien Inmu<span class="mandatory">*</span></div>
+<input class="sap-in ${isBienMandatory ? 'mandatory' : ''}" id="sap_tipo" style="width:70px;font-weight:900;color:#1e3a8a" value="${esc(s.tipoEstaBienInmu)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnTipoBienModal" title="Buscar">🔎</button>
+<span class="sap-value-desc">${esc(bienDesc)}</span>
+</div>
+<div class="sap-row">
+<div class="lab">Estrato Cód Almacén</div>
+<input class="sap-in ro" style="width:110px" value="${esc(s.estratoCodAlmacen)}" readonly>
+<span class="sap-value-desc">3086 Intendencia BASPC 30</span>
+</div>
+<div style="border-top:1px solid #cbd5e1;margin:14px 0"></div>
+<div class="sap-row">
+<div class="lab">Status</div>
+<input class="sap-in ro" style="width:70px" value="${esc(s.status)}" readonly>
+<span class="sap-value-desc">Bien Recibido</span>
+</div>
+<div class="sap-row">
+<div class="lab">Sist/Eq</div>
+<input class="sap-in ro" style="width:70px" value="${esc(s.sistEq)}" readonly>
+<span class="sap-value-desc">EQUIPO SEGURIDAD Y RESCATE</span>
+</div>
+<div class="sap-row">
+<div class="lab">Responsable</div>
+<input class="sap-in ro" style="width:110px" value="${esc(s.responsable)}" readonly>
+<span class="sap-value-desc">ZAMORA BALANTA EDWARD</span>
+</div>
+</div>
+`;
+qs("#btnInmEstModal", body).onclick = () => setState({ showInmEst: true });
+qs("#btnMarcaSexoModal", body).onclick = () => setState({ showMarcaSexo: true });
+qs("#btnColorModal", body).onclick = () => setState({ showColor: true });
+qs("#btnTipoBienModal", body).onclick = () => setState({ showTipoBien: true });
+}
+else if (state.sapSubTab === "Origen") {
+const isFabricanteMandatory = !s.fabricante;
+const isPaisMandatory = !s.paisOrigen;
+body.innerHTML = `
+<div class="sap-box">
+<div class="cap">Origen</div>
+<div class="sap-row">
+<div class="lab">Acreedor</div>
+<input class="sap-in" style="width:120px" id="sap_acreedor" value="${esc(s.acreedor)}" readonly>
+<button class="sap-help" id="btnAcreedorModal" title="Buscar acreedor">🔎</button>
+<span class="sap-value-desc">${esc(s.acreedorDesc)}</span>
+</div>
+<div class="sap-row">
+<div class="lab">Fabricante<span class="mandatory">*</span></div>
+<input class="sap-in ${isFabricanteMandatory ? 'mandatory' : ''}" style="width:300px" id="sap_fabricante" value="${esc(s.fabricante)}" placeholder="Obligatorio">
+</div>
+<div class="sap-row">
+<div class="lab"></div>
+<div class="grow">
+<label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#444;margin-right:20px">
+<input type="checkbox" id="sap_afNuevo" ${s.afCompradoNuevo ? 'checked' : ''}>
+AF comprado nuevo
+</label>
+<label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#444">
+<input type="checkbox" id="sap_2Mano" ${s.comprado2Mano ? 'checked' : ''}>
+Comprado 2ª mano
+</label>
+</div>
+</div>
+<div class="sap-row">
+<div class="lab">País origen<span class="mandatory">*</span></div>
+<input class="sap-in ${isPaisMandatory ? 'mandatory' : ''}" style="width:60px" id="sap_pais" value="${esc(s.paisOrigen)}" readonly placeholder="Obligatorio">
+<button class="sap-help" id="btnPaisModal" title="Buscar país">🔎</button>
+<span class="sap-value-desc">${esc(s.paisOrigenDesc)}</span>
+</div>
+<div class="sap-row">
+<div class="lab">Ubicación</div>
+<input class="sap-in" style="width:150px" id="sap_ubicacion" value="${esc(s.ubicacion)}">
+</div>
+<div style="border-top:1px solid #cbd5e1;margin:14px 0"></div>
+<div class="sap-row">
+<div class="lab">Activo fijo orig.</div>
+<input class="sap-in ro" style="width:120px" value="${esc(s.activoFijoOrig)}" readonly>
+<input class="sap-in ro" style="width:40px;margin-left:6px" value="0" readonly>
+<div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+<small>Alta el</small>
+<input class="sap-in ro" style="width:100px" value="${esc(s.altaEl)}" readonly>
+</div>
+</div>
+</div>
+`;
+qs("#sap_acreedor", body).onclick = () => setState({ showAcreedor: true });
+qs("#sap_fabricante", body).oninput = (e) => { state.sapForm.fabricante = e.target.value; };
+qs("#sap_afNuevo", body).onchange = (e) => { state.sapForm.afCompradoNuevo = e.target.checked; };
+qs("#sap_2Mano", body).onchange = (e) => { state.sapForm.comprado2Mano = e.target.checked; };
+qs("#sap_pais", body).onclick = () => setState({ showPais: true });
+qs("#sap_ubicacion", body).oninput = (e) => { state.sapForm.ubicacion = e.target.value; };
+qs("#btnAcreedorModal", body).onclick = () => setState({ showAcreedor: true });
+qs("#btnPaisModal", body).onclick = () => setState({ showPais: true });
+}
+else if (state.sapSubTab === "Info Patrimonio") {
+const ipDesc = ipMap.get(s.indicadorPropiedad)?.desc || "";
+body.innerHTML = `
+<div class="sap-box">
+<div class="cap">Valoración del patrimonio</div>
+<div class="sap-row">
+<div class="lab">Indicador propiedad</div>
+<input class="sap-in" style="width:60px;font-weight:900" id="sap_ip" value="${esc(s.indicadorPropiedad)}" readonly>
+<button class="sap-help" id="btnIPModal" title="Buscar indicador de propiedad">🔎</button>
+<span class="sap-value-desc">${esc(ipDesc)}</span>
+</div>
+<div class="sap-row" style="margin-top:16px">
+<div class="lab">Depto/Mpio</div>
+<input class="sap-in" style="width:100px" id="sap_depto" value="">
+<input class="sap-in" style="width:150px;margin-left:10px" id="sap_mpio" value="">
+</div>
+</div>
+`;
+qs("#btnIPModal", body).onclick = () => setState({ showIP: true });
+qs("#sap_ip", body).onclick = () => setState({ showIP: true });
+qs("#sap_depto", body).oninput = (e) => { state.sapForm.depto = e.target.value; };
+qs("#sap_mpio", body).oninput = (e) => { state.sapForm.mpio = e.target.value; };
+}
+else if (state.sapSubTab === "Valores Contables") {
+body.innerHTML = `
+<div style="height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#94a3b8">
+<div class="spinner"></div>
+<div style="margin-top:10px;font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase">Cargando...</div>
+</div>
+`;
+}
+}
+function renderCuentas() {
+const root = qs("#viewCuentas");
+const data = filteredAccounts();
+root.innerHTML = `
+<div class="card" style="max-width:1100px;margin:0 auto">
+<div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:16px">
+<div class="row" style="gap:14px">
+<div class="pill" style="background:#fffbeb;border-color:#fde68a">
+<span>🗄️</span><span style="font-weight:900">Catálogo de Cuentas</span>
+</div>
+<div class="col">
+<div style="font-size:20px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase">Catálogo de Cuentas</div>
+<div class="muted" style="font-weight:600">Filtre por tipo de activo o busque por código/descripción.</div>
+</div>
+</div>
+<div style="width:420px;max-width:100%">
+<div class="searchwrap">
+<div class="sicon">🔎</div>
+<input id="accSearch" type="text" placeholder="Buscar por código (ej. 1635) o descripción..." value="${esc(state.search)}">
+</div>
+</div>
+</div>
+<div class="chipbar">
+${[{label:'Todos',ic:'🗂️'},{label:'Enseñanza',ic:'📄'},{label:'Seguridad',ic:'🛡️'},{label:'Audiovisual',ic:'🖥️'},{label:'Armamento',ic:'🛡️'},{label:'Herramientas',ic:'🔧'}].map(x => `
+<button class="chip ${state.filter === x.label ? 'active' : ''}" data-filter="${esc(x.label)}">
+<span class="ic">${x.ic}</span><span>${esc(x.label)}</span>
+</button>
+`).join("")}
+</div>
+</div>
+<div class="card" style="max-width:1100px;margin:18px auto 0;padding:0;overflow:hidden">
+<div style="overflow:auto">
+<table>
+<thead class="thead-dark">
+<tr><th>Clase de Activo</th><th>Descripción Técnica Contable</th><th>Categoría</th><th style="text-align:center">Copiar</th></tr>
+</thead>
+<tbody id="accTbody"></tbody>
+</table>
+</div>
+<div id="accEmpty" style="display:none;padding:50px;text-align:center;color:#94a3b8">
+<div style="font-size:44px">🔎</div>
+<div style="margin-top:10px;font-weight:900;text-transform:uppercase">Sin resultados</div>
+<div style="margin-top:4px">Intenta cambiar los filtros o el término de búsqueda.</div>
+</div>
+</div>
+`;
+const tb = qs("#accTbody", root);
+if (!data.length) {
+qs("#accEmpty", root).style.display = "block";
+return;
+}
+qs("#accEmpty", root).style.display = "none";
+tb.innerHTML = data.map(it => {
+const copied = state.copiedCode === it.code;
+const cat = it.cat;
+const catStyle =
+cat === 'Enseñanza' ? 'border:1px solid #bfdbfe;color:#1d4ed8;background:#eff6ff' :
+cat === 'Seguridad' ? 'border:1px solid #bbf7d0;color:#047857;background:#ecfdf5' :
+cat === 'Audiovisual' ? 'border:1px solid #e9d5ff;color:#6d28d9;background:#faf5ff' :
+cat === 'Armamento' ? 'border:1px solid #fecaca;color:#b91c1c;background:#fef2f2' :
+cat === 'Herramientas' ? 'border:1px solid #fed7aa;color:#c2410c;background:#fff7ed' :
+'border:1px solid #e2e8f0;color:#334155;background:#f1f5f9';
+const subStyle =
+it.sub === 'Operativo' ? 'background:#dcfce7;color:#065f46;border:1px solid #bbf7d0' :
+it.sub === 'Bodega' ? 'background:#fef3c7;color:#92400e;border:1px solid #fde68a' :
+it.sub === 'No Explotados' ? 'background:#e2e8f0;color:#334155;border:1px solid #cbd5e1' :
+it.sub === 'Mantenimiento' ? 'background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe' :
+'background:#f1f5f9;color:#334155;border:1px solid #e2e8f0';
+return `
+<tr>
+<td><span class="pill mono">${esc(it.code)}</span></td>
+<td>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-weight:900;color:#0f172a">${esc(it.desc)}</div>
+<div><span class="badge" style="${catStyle}">${esc(it.cat)}</span></div>
+</div>
+</td>
+<td><span class="badge" style="${subStyle}">${esc(it.sub)}</span></td>
+<td style="text-align:center">
+<button class="copybtn ${copied ? 'copied' : ''}" data-copy="${esc(it.code)}" title="Copiar código">
+${copied ? '✅' : '📋'}
+</button>
+</td>
+</tr>
+`;
+}).join("");
+}
+function renderDrones() {
+const root = qs("#viewDrones");
+const data = filteredDrones();
+root.innerHTML = `
+<div class="card" style="max-width:1100px;margin:0 auto">
+<div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:16px">
+<div class="row" style="gap:14px">
+<div class="pill" style="background:#ecfeff;border-color:#a5f3fc">
+<span>✈️</span><span style="font-weight:900">Homologación Drones</span>
+</div>
+<div class="col">
+<div style="font-size:20px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase">Homologación Drones</div>
+<div class="muted" style="font-weight:600">Catálogo estructurado de sistemas UAS, RPAS y C-UAS.</div>
+</div>
+</div>
+<div style="width:420px;max-width:100%">
+<div class="searchwrap">
+<div class="sicon">🔎</div>
+<input id="drSearch" type="text" placeholder="Buscar por categoría, tipo o SAP..." value="${esc(state.dronesSearch)}">
+</div>
+</div>
+</div>
+<div class="df" style="margin-top:14px">
+<button class="${state.dronesFilter === 'Todos' ? 'active' : ''}" data-df="Todos">Todos</button>
+<button class="${state.dronesFilter === 'UAS' ? 'active cyan' : ''}" data-df="UAS" title="Sistemas de aeronaves no tripuladas">UAS</button>
+<button class="${state.dronesFilter === 'RPAS' ? 'active indigo' : ''}" data-df="RPAS" title="Sistemas de aeronaves tripuladas por control remoto">RPAS</button>
+<button class="${state.dronesFilter === 'C-UAS' ? 'active rose' : ''}" data-df="C-UAS" title="Sistema Contra Aeronaves No Tripuladas">C-UAS</button>
+</div>
+</div>
+<div class="card" style="max-width:1100px;margin:18px auto 0;padding:0;overflow:hidden">
+<div style="overflow:auto">
+<table>
+<thead class="thead-blue">
+<tr><th style="min-width:160px">Categoría</th><th style="width:120px;text-align:center">Cod. SAP</th><th style="min-width:160px">Tipo Estado Bien</th><th style="width:220px;text-align:center">Cod. SAP - Tipo Estado Bien</th><th style="min-width:220px">Denominación</th></tr>
+</thead>
+<tbody id="drTbody"></tbody>
+</table>
+</div>
+</div>
+`;
+const tb = qs("#drTbody", root);
+if (!data.length) {
+tb.innerHTML = `<tr><td colspan="5" style="padding:24px;text-align:center;color:#94a3b8;font-style:italic">No se encontraron resultados.</td></tr>`;
+return;
+}
+let html = "";
+data.forEach((g) => {
+html += `<tr class="group-row"><td colspan="5">${esc(g.grupo)} (${esc(g.grupoDesc)})</td></tr>`;
+g.categorias.forEach((cat) => {
+cat.items.forEach((it, iIdx) => {
+html += `<tr style="border-bottom:1px solid #eef2f7">
+${iIdx === 0 ? `
+<td rowspan="${cat.items.length}" style="background:#f8fafc;border-right:1px solid #e2e8f0;font-weight:900;font-size:11px;color:#1f2937">${esc(cat.nombre)}</td>
+<td rowspan="${cat.items.length}" style="background:#f8fafc;border-right:1px solid #e2e8f0;text-align:center">
+<span class="pill mono" style="background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 8px rgba(2,6,23,.06)">${esc(cat.sap)}</span>
+</td>
+` : ""}
+<td style="border-right:1px solid #f1f5f9;font-size:11px;font-weight:800;text-transform:uppercase;color:#334155">${esc(it.tipo)}</td>
+<td style="border-right:1px solid #f1f5f9;text-align:center">
+<div style="display:flex;align-items:center;justify-content:center;gap:8px">
+<span class="pill mono" style="background:#ecfeff;border-color:#a5f3fc;color:#0e7490">${esc(it.sapTipo)}</span>
+<button class="copybtn" data-copy="${esc(it.sapTipo)}" title="Copiar Código">📋</button>
+</div>
+</td>
+<td style="font-size:11px;color:#64748b;font-style:italic;background:rgba(248,250,252,.6)">${esc(it.denom || "---")}</td>
+</tr>`;
+});
+});
+});
+tb.innerHTML = html;
+}
+function renderNormativo() {
+const root = qs("#viewNormativo");
+root.innerHTML = `
+<div class="normativo-content">
+<div class="normativo-section">
+<div class="normativo-title">📜 GUÍA PARA EL DILIGENCIAMIENTO DE DATOS MAESTROS - SISTEMAS UAS/RPAS Y C-UAS</div>
+<div class="normativo-text"><strong>Código:</strong> GL-G-007 | <strong>Versión:</strong> 1 | <strong>Vigente a partir de:</strong> 15 de febrero de 2026</div>
+<div class="normativo-text"><strong>Elaborado por:</strong> OPS. Jhon Alexander Ladino Reyes | <strong>Revisado por:</strong> PD. Wilson Eduardo Rodriguez Rico | <strong>Aprobado por:</strong> Alcides Leonardo Pareja Ortega - Director de Logística MDN</div>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">🎯 OBJETIVO</div>
+<div class="normativo-text">Establecer la guía para diligenciamiento de datos maestros de los sistemas aéreos no tripulados (UAS/RPAS) y medidas de contrarresto (C-UAS) al sistema SAP – SILOG con el propósito de asegurar su correcta clasificación conforme al manual de procesos administrativos y contables y dar cumplimiento a la circular No. RS20250113003263 de 13 de enero de 2025 "Lineamientos para la Planeación de Adquisiciones y Sostenimiento de UAS/RPAS y C-UAS para la Fuerza Pública" anexo "5" y en cumplimiento a las reglas de vuelo y operación para los sistemas aéreos no tripulados y sistemas de aeronaves remotamente pilotadas - RACAE 94 adoptado mediante Resolución No. 001 del 13 de junio de 2025 y diario oficial N° 53.151 del 16 de junio de 2025.</div>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">📋 ALCANCE</div>
+<div class="normativo-text">La presente guía inicia con la introducción, definición de conceptos, actividades para el registro en el sistema y finaliza con los anexos, es aplicable para actualización de información de los sistemas UAS/RPAS y C-UAS en el sector defensa, garantizando información de alta confiabilidad para la gerencia quien basa sus decisiones en los datos registrados en el Sistema de Información Logística SILOG.</div>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">📊 INDICADORES DE PROPIEDAD (INFO PATRIMONIO)</div>
+<div class="normativo-text">En la pestaña de INFO PATRIMONIO del dato maestro del activo fijo, se selecciona el campo indicador de propiedad para indicar la fuente de recursos para la adquisición del equipo.</div>
+<table class="normativo-table">
+<thead><tr><th>Código</th><th>Descripción</th><th>Código</th><th>Descripción</th></tr></thead>
+<tbody>
+${indicadorPropiedadData.map((ip, i) => {
+if (i % 2 === 0) {
+const next = indicadorPropiedadData[i + 1];
+return `<tr><td class="code-col">${esc(ip.code)}</td><td class="desc-col">${esc(ip.desc)}</td><td class="code-col">${next ? esc(next.code) : ''}</td><td class="desc-col">${next ? esc(next.desc) : ''}</td></tr>`;
+}
+return '';
+}).join('')}
+</tbody>
+</table>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">🛩️ CLASIFICACIÓN DE SISTEMAS UAS/RPAS Y C-UAS</div>
+<div class="normativo-subtitle">UAS (Sistemas de aeronaves no tripuladas)</div>
+<table class="normativo-table">
+<thead><tr><th>Cobertura (Categoria)</th><th>Cod. SAP (categoria)</th><th>Tipo Estado Bien</th><th>Cod. SAP - Tipo Estado Bien</th></tr></thead>
+<tbody>
+<tr><td>Peso (MTOW): 15 g–<7 kg Altura de operación Hasta: 400 ft AGL Radio de operación: 5 km (VLOS)</td><td class="code-col">28 / 33</td><td>Clase I-IA</td><td class="code-col">26</td></tr>
+<tr><td>Peso (MTOW): 7–<15 kg Altura de operación Hasta: <1000 pies Radio de operación: Hasta 25 Km Velocidad Máxima: Hasta 50 KtsS</td><td class="code-col">28 / 33</td><td>Clase I-IB</td><td class="code-col">27</td></tr>
+</tbody>
+</table>
+<div class="normativo-subtitle">RPAS (Sistemas de aeronaves tripuladas por control remoto)</div>
+<table class="normativo-table">
+<thead><tr><th>Cobertura (Categoria)</th><th>Cod. SAP (Categoria)</th><th>Tipo Estado Bien</th><th>Cod. SAP - Tipo Estado Bien</th></tr></thead>
+<tbody>
+<tr><td>Peso (MTOW): >15–<150 kg Altura de operación: Hasta 15,000 ft MSL Radio de operación: 140 km (LOS)</td><td class="code-col">30 / 34</td><td>Clase I-IC</td><td class="code-col">28</td></tr>
+<tr><td>Peso (MTOW): 150–600 kg Altura de operación: Hasta 18,000 ft MSL Radio de operación: 200 km (LOS)</td><td class="code-col">30 / 34</td><td>Clase II</td><td class="code-col">29</td></tr>
+<tr><td>Peso (MTOW): > 600 kg Altura de operación: Hasta FL450 Radio de operación: Ilimitado (según performance)</td><td class="code-col">30 / 34</td><td>Clase III-MALE</td><td class="code-col">24</td></tr>
+<tr><td>Peso (MTOW): > 600 kg Altura de operación: Hasta FL650 Radio de operación: Ilimitado (según performance)</td><td class="code-col">30 / 34</td><td>Clase III-HALE</td><td class="code-col">23</td></tr>
+<tr><td>Clase III Strike/Combat</td><td class="code-col">30 / 34</td><td>Clase III Strike/Combat</td><td class="code-col">22</td></tr>
+<tr><td>Los accesorios o subcomponentes de los sistemas UAS/RPAS/C-UAS se deben identificar en el criterio 4 de acuerdo con la naturaleza del bien así: 25. ACCES DRON /C-UAS</td><td class="code-col">Según categoria</td><td>ACCES - DRON / C-UAS</td><td class="code-col">25</td></tr>
+</tbody>
+</table>
+<div class="normativo-subtitle">C-UAS (Sistema Contra Aeronaves No Tripuladas)</div>
+<table class="normativo-table">
+<thead><tr><th>Sistema</th><th>Cod. SAP</th><th>Tipo</th><th>Cod. SAP - Tipo</th></tr></thead>
+<tbody>
+<tr><td>Defensa continua de instalaciones críticas; integración por capas</td><td class="code-col">7</td><td>C-UAS -FIJO</td><td class="code-col">175</td></tr>
+<tr><td>Protección temporal prolongada; bases temporales; puestos avanzados</td><td class="code-col">7</td><td>C-UAS -SEMIFIJO</td><td class="code-col">176</td></tr>
+<tr><td>Protección inmediata de unidades; patrullas y convoys; puntos críticos</td><td class="code-col">7</td><td>C-UAS -TACTICO</td><td class="code-col">177</td></tr>
+<tr><td>Los accesorios o subcomponentes de los sistemas UAS/RPAS/C-UAS se deben identificar en el criterio 4 de acuerdo con la naturaleza del bien así: 25. ACCES DRON /C-UAS</td><td class="code-col">7</td><td>ACCES - DRON / C-UAS</td><td class="code-col">25</td></tr>
+</tbody>
+</table>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">📖 DEFINICIONES</div>
+<div class="normativo-grid">
+<div class="normativo-card"><div class="normativo-card-title">🦅 CETRERÍA</div><div class="normativo-card-text">Se refiere al uso de aves rapaces entrenadas para neutralizar drones.</div></div>
+<div class="normativo-card"><div class="normativo-card-title">📡 JAMMING</div><div class="normativo-card-text">Es el uso de un dispositivo llamado "Jammer" cuya misión es bloquear e inhibir la funcionalidad del equipo de rastreo GPS, celulares GSM, 2G, 3G, 4G LTE, radios UHF y VHF, Wifi y Nextel.</div></div>
+<div class="normativo-card"><div class="normativo-card-title">🔄 MEACONING</div><div class="normativo-card-text">Es la interceptación y retransmisión de señales de navegación, las cuales se retransmiten en la frecuencia recibida, normalmente con una potencia superior a la de la señal original, para confundir a la navegación enemiga.</div></div>
+<div class="normativo-card"><div class="normativo-card-title">🎭 SPOOFING</div><div class="normativo-card-text">Consiste en la emisión de señales falsas que engañan a los sistemas de navegación de las aeronaves.</div></div>
+<div class="normativo-card"><div class="normativo-card-title">🚀 SISTEMAS NASAMS</div><div class="normativo-card-text">(Norwegian Advanced Surface to Air Missile System) - Sistema de Misiles Superficie-Aire Avanzado Noruego, es un sistema de defensa antiaérea de medio-largo alcance.</div></div>
+</div>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">🔤 ABREVIATURAS</div>
+<div class="normativo-grid">
+<div class="normativo-card"><div class="normativo-card-title">UAS</div><div class="normativo-card-text">(Unmanned Aerial System) Sistemas de aeronaves no tripuladas</div></div>
+<div class="normativo-card"><div class="normativo-card-title">RPAS</div><div class="normativo-card-text">(Remotely Piloted Aircraft System) Sistema de aeronaves tripuladas por control remoto</div></div>
+<div class="normativo-card"><div class="normativo-card-title">C-UAS</div><div class="normativo-card-text">(Counter-Unmanned Aircraft System) Son sistemas diseñados para identificar, rastrear y mitigar aeronaves no tripuladas (drones) no autorizadas o maliciosas que supongan una amenaza para la seguridad nacional</div></div>
+<div class="normativo-card"><div class="normativo-card-title">DOMPI</div><div class="normativo-card-text">(Doctrina y documentos, Organización, Material y Equipo, Personal, e Infraestructura), son las variables que en conjunto hacen posible el desarrollo de una capacidad</div></div>
+<div class="normativo-card"><div class="normativo-card-title">RACAE 94</div><div class="normativo-card-text">(Reglamento Aeronáutico Colombiano de la Aviación del Estado), es el reglamento que establece las normas para el vuelo y operación de sistemas aéreos no tripulados y aeronaves remotamente pilotadas en Colombia</div></div>
+<div class="normativo-card"><div class="normativo-card-title">AAAES</div><div class="normativo-card-text">(Autoridad Aeronáutica de Aviación de Estado) en ejercicio de la facultad legal establecida en el Decreto 2937 del 2010, regula la Aviación de Estado en pro del desarrollo de operaciones aéreas con seguridad y eficiencia</div></div>
+<div class="normativo-card"><div class="normativo-card-title">RF</div><div class="normativo-card-text">(Radiofrecuencia) es una banda de frecuencia usada para la transmisión inalámbrica de señales</div></div>
+<div class="normativo-card"><div class="normativo-card-title">GNSS</div><div class="normativo-card-text">(Sistemas Globales de navegación por satélite) los cuales se basan en una constelación de satélites que orbitan la tierra a una altitud aproximada de 20,000 km desde la cual transmiten su posición tridimensional o efemérides (posición y velocidad del satélite) a toda la superficie de la tierra</div></div>
+</div>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">📎 ANEXOS</div>
+<div class="info-box">
+<div class="info-box-title">📄 Documentación de Soporte</div>
+<div class="info-box-text">Circular No. RS20250113003263 de fecha del 13 de enero de 2025 que trata de los "Lineamientos para la Planeación de Adquisiciones y Sostenimiento de UAS/RPAS y C-UAS para la Fuerza Pública" Anexo "1" y Anexo "5".</div>
+</div>
+</div>
+<div class="normativo-section">
+<div class="normativo-title">⚠️ NOTA IMPORTANTE</div>
+<div class="normativo-highlight">
+<div class="normativo-highlight-title">🔒 Confidencialidad</div>
+<div class="normativo-text">Este documento es propiedad del Ministerio de Defensa Nacional, no está autorizado su reproducción total o parcial.</div>
+</div>
+</div>
+</div>
+`;
+}
+function renderWizard() {
+const back = qs("#wizardBack");
+back.classList.toggle("show", !!state.showWizard);
+if (!state.showWizard) return;
+const w = state.wizardForm;
+const grupoOpts = dronesData.map(g => `<option value="${esc(g.grupo)}">${esc(g.grupo)}</option>`).join("");
+const catList = w.grupoSel ? (dronesData.find(g => g.grupo === w.grupoSel)?.categorias || []) : [];
+const catOpts = catList.map(c => `<option value="${esc(c.nombre)}">${esc(c.nombre)}</option>`).join("");
+const itemList = (w.grupoSel && w.categoriaSel) ? (catList.find(c => c.nombre === w.categoriaSel)?.items || []) : [];
+const itemOpts = itemList.map(i => `<option value="${esc(i.tipo)}">${esc(i.tipo)}</option>`).join("");
+const cuentas = getFilteredCuentas();
+const cuentaOpts = cuentas.map(c => `<option value="${esc(c.code)}">${esc(c.descLarga)}</option>`).join("");
+qs("#wizardBody").innerHTML = `
+<div class="section">
+<h6 class="sec-title">🗃️ 1. Catálogo Técnico (UAS / RPAS / C-UAS)</h6>
+<div class="grid g3">
+<div><label>Grupo</label><select id="w_grupo"><option value="">Seleccione...</option>${grupoOpts}</select></div>
+<div><label>Categoría</label><select id="w_cat" ${w.grupoSel ? "" : "disabled"}><option value="">Seleccione...</option>${catOpts}</select></div>
+<div><label>Tipo Estado Bien</label><select id="w_item" ${w.categoriaSel ? "" : "disabled"}><option value="">Seleccione...</option>${itemOpts}</select></div>
+</div>
+${w.itemSel ? `
+<div class="hint" style="margin-top:12px">
+<div style="font-weight:900;margin-bottom:6px">Auto-propuesto (Pestañas SAP):</div>
+<div style="display:grid;gap:6px">
+<div>• Denominación: <span class="mono">${esc(w.denominacion || "-")}</span></div>
+<div>• Cod. Clase (Ubicación): <span class="mono">${esc(w.claseUbicacion || "-")}</span></div>
+<div>• Tipo Estado Bien Inmu: <span class="mono">${esc(w.tipoEstaBienInmu || "-")}</span></div>
+</div>
+</div>
+` : ""}
+</div>
+<div class="section" style="margin-top:12px">
+<h6 class="sec-title">📋 2. Selección de Clase de Cuenta Contable</h6>
+<div><label>Clase de Cuenta</label><select id="w_cuenta" ${w.itemSel ? "" : "disabled"}><option value="">${w.itemSel ? "Seleccione la clase de cuenta contable..." : "Primero seleccione el catálogo técnico para ver opciones..."}</option>${cuentaOpts}</select></div>
+</div>
+<div class="section" style="margin-top:12px">
+<h6 class="sec-title">📝 3. Datos Generales y de Uso</h6>
+<div class="grid" style="grid-template-columns:1fr;gap:12px">
+<div><label>Denominación Adicional</label><input id="w_denomAdd" type="text" placeholder="Ej: CAMARA SN: 12345" value="${esc(w.denomAdicional || "")}"></div>
+<div class="grid g2">
+<div><label>Número de Serie</label><input id="w_serie" type="text" placeholder="S/N del equipo" value="${esc(w.serie || "")}"></div>
+<div><label>Estado de Uso</label><select id="w_estado"><option value="">Seleccione...</option>${estadosUso.map(e => `<option value="${esc(e.val)}">${esc(e.val)} - ${esc(e.desc)}</option>`).join("")}</select></div>
+</div>
+</div>
+</div>
+<div class="section" style="margin-top:12px">
+<h6 class="sec-title">🧷 4. Clasificación Adicional</h6>
+<div class="grid g3">
+<div><label>Inm est Mode Raza</label><select id="w_inm"><option value="">Seleccione...</option>${inmEstModeRazaData.map(o => `<option value="${esc(o.val)}">${esc(o.val)} - ${esc(o.desc)}</option>`).join("")}</select></div>
+<div><label>Ubicación Marca Sexo</label><select id="w_mar"><option value="">Seleccione...</option>${ubicacionMarcaSexoData.map(o => `<option value="${esc(o.val)}">${esc(o.val)} - ${esc(o.desc)}</option>`).join("")}</select></div>
+<div><label>Tipo Inmueble Color</label><select id="w_col"><option value="">Seleccione...</option>${tipoInmuebleColorData.map(o => `<option value="${esc(o.val)}">${esc(o.val)} - ${esc(o.desc)}</option>`).join("")}</select></div>
+</div>
+</div>
+`;
+qs("#w_grupo").value = w.grupoSel;
+if (w.grupoSel) qs("#w_cat").value = w.categoriaSel;
+if (w.categoriaSel) qs("#w_item").value = w.itemSel;
+if (w.itemSel) qs("#w_cuenta").value = w.claseCuentaSel;
+qs("#w_denomAdd").value = w.denomAdicional || "";
+qs("#w_serie").value = w.serie || "";
+qs("#w_estado").value = w.estadoUso || "";
+qs("#w_inm").value = w.inmEstModeRaza || "";
+qs("#w_mar").value = w.ubiMarcaSexo || "";
+qs("#w_col").value = w.tipoInmColor || "";
+qs("#w_grupo").onchange = (e) => {
+setState({
+wizardForm: { ...state.wizardForm, grupoSel: e.target.value, categoriaSel: "", itemSel: "", denominacion: "", claseUbicacion: "", tipoEstaBienInmu: "", claseCuentaSel: "" }
+}, false);
+scheduleRender();
+};
+qs("#w_cat").onchange = (e) => {
+setState({
+wizardForm: { ...state.wizardForm, categoriaSel: e.target.value, itemSel: "", denominacion: "", claseUbicacion: "", tipoEstaBienInmu: "", claseCuentaSel: "" }
+}, false);
+scheduleRender();
+};
+qs("#w_item").onchange = (e) => {
+const val = e.target.value;
+const grupo = dronesData.find(g => g.grupo === state.wizardForm.grupoSel);
+const cat = grupo?.categorias.find(c => c.nombre === state.wizardForm.categoriaSel);
+const item = cat?.items.find(i => i.tipo === val);
+if (item && cat) {
+setState({
+wizardForm: {
+...state.wizardForm,
+itemSel: val,
+denominacion: item.denom !== "---" ? item.denom : "",
+claseUbicacion: cat.sap !== "N/A" ? cat.sap : "",
+tipoEstaBienInmu: item.sapTipo !== "N/A" ? item.sapTipo : "",
+claseCuentaSel: ""
+}
+}, false);
+} else {
+setState({ wizardForm: { ...state.wizardForm, itemSel: val, claseCuentaSel: "" } }, false);
+}
+scheduleRender();
+};
+qs("#w_cuenta").onchange = (e) => { state.wizardForm.claseCuentaSel = e.target.value; };
+qs("#w_denomAdd").oninput = (e) => { state.wizardForm.denomAdicional = e.target.value.toUpperCase(); };
+qs("#w_serie").oninput = (e) => { state.wizardForm.serie = e.target.value.toUpperCase(); };
+qs("#w_estado").onchange = (e) => { state.wizardForm.estadoUso = e.target.value; };
+qs("#w_inm").onchange = (e) => { state.wizardForm.inmEstModeRaza = e.target.value; };
+qs("#w_mar").onchange = (e) => { state.wizardForm.ubiMarcaSexo = e.target.value; };
+qs("#w_col").onchange = (e) => { state.wizardForm.tipoInmColor = e.target.value; };
+qs("#wizardClose").onclick = () => setState({ showWizard: false });
+qs("#wizardCancel").onclick = () => setState({ showWizard: false });
+qs("#wizardApply").onclick = () => {
+const wf = state.wizardForm;
+const claseSel = cuentasMap.get(wf.claseCuentaSel);
+const catData = categoriasMap.get(wf.claseUbicacion);
+setState({
+sapForm: {
+...state.sapForm,
+claseCodigo: claseSel ? claseSel.code : state.sapForm.claseCodigo,
+claseDescripcion: claseSel ? claseSel.desc : state.sapForm.claseDescripcion,
+claseDescripcionLarga: claseSel ? claseSel.descLarga : state.sapForm.claseDescripcionLarga,
+denominacion: wf.denominacion || state.sapForm.denominacion,
+denomAdicional: wf.denomAdicional || state.sapForm.denomAdicional,
+serie: wf.serie || state.sapForm.serie,
+estadoUso: wf.estadoUso || state.sapForm.estadoUso,
+categoria: wf.claseUbicacion || state.sapForm.categoria,
+categoriaDesc: catData ? catData.desc : state.sapForm.categoriaDesc,
+claseUbicacion: wf.claseUbicacion || state.sapForm.claseUbicacion,
+inmEstModeRaza: wf.inmEstModeRaza || state.sapForm.inmEstModeRaza,
+ubiMarcaSexo: wf.ubiMarcaSexo || state.sapForm.ubiMarcaSexo,
+tipoInmColor: wf.tipoInmColor || state.sapForm.tipoInmColor,
+tipoEstaBienInmu: wf.tipoEstaBienInmu || state.sapForm.tipoEstaBienInmu
+},
+showWizard: false
+});
+toast("Datos aplicados a SAP");
+};
+}
+// Modal renderers (simplified with Maps)
+function renderEstadoModal() {
+const back = qs("#estadoBack");
+back.classList.toggle("show", !!state.showEstado);
+if (!state.showEstado) return;
+qs("#estadoBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+<div style="font-size:11px;color:#991b1b;margin-top:4px">Debe seleccionar un estado de uso para continuar.</div>
+</div>
+<div style="display:grid;gap:8px">
+${estadosUso.map(e => `
+<div class="estado-row ${state.sapForm.estadoUso === e.val ? 'selected' : ''}" data-val="${esc(e.val)}">
+<div class="estado-code">${esc(e.val)}</div>
+<div class="estado-desc">${esc(e.desc)}</div>
+<div class="estado-def">${esc(e.def)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".estado-row", qs("#estadoBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.estadoUso = row.dataset.val;
+setState({ showEstado: false });
+toast(`Estado seleccionado: ${row.dataset.val}`);
+};
+});
+qs("#estadoClose").onclick = () => setState({ showEstado: false });
+qs("#estadoOk").onclick = () => setState({ showEstado: false });
+}
+function renderCategoriaModal() {
+const back = qs("#categoriaBack");
+back.classList.toggle("show", !!state.showCategoria);
+if (!state.showCategoria) return;
+qs("#categoriaBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+<div style="font-size:11px;color:#991b1b;margin-top:4px">Debe seleccionar una categoría para continuar.</div>
+</div>
+<div style="display:grid;gap:8px">
+${categoriasUbicacion.map(c => `
+<div class="categoria-row ${state.sapForm.categoria === c.code ? 'selected' : ''}" data-code="${esc(c.code)}" data-desc="${esc(c.desc)}">
+<div class="categoria-code">${esc(c.code)}</div>
+<div class="categoria-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".categoria-row", qs("#categoriaBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.categoria = row.dataset.code;
+state.sapForm.categoriaDesc = row.dataset.desc;
+setState({ showCategoria: false });
+toast(`Categoría seleccionada: ${row.dataset.code}`);
+};
+});
+qs("#categoriaClose").onclick = () => setState({ showCategoria: false });
+qs("#categoriaOk").onclick = () => setState({ showCategoria: false });
+}
+function renderInmEstModal() {
+const back = qs("#inmEstBack");
+back.classList.toggle("show", !!state.showInmEst);
+if (!state.showInmEst) return;
+qs("#inmEstBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+</div>
+<div style="display:grid;gap:8px">
+${inmEstModeRazaData.map(c => `
+<div class="clas-row ${state.sapForm.inmEstModeRaza === c.val ? 'selected' : ''}" data-val="${esc(c.val)}" data-desc="${esc(c.desc)}">
+<div class="clas-code">${esc(c.val)}</div>
+<div class="clas-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".clas-row", qs("#inmEstBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.inmEstModeRaza = row.dataset.val;
+state.sapForm.inmEstModeRazaDesc = row.dataset.desc;
+setState({ showInmEst: false });
+toast(`Inm est seleccionado: ${row.dataset.val}`);
+};
+});
+qs("#inmEstClose").onclick = () => setState({ showInmEst: false });
+qs("#inmEstOk").onclick = () => setState({ showInmEst: false });
+}
+function renderMarcaSexoModal() {
+const back = qs("#marcaSexoBack");
+back.classList.toggle("show", !!state.showMarcaSexo);
+if (!state.showMarcaSexo) return;
+qs("#marcaSexoBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+</div>
+<div style="display:grid;gap:8px">
+${ubicacionMarcaSexoData.map(c => `
+<div class="clas-row ${state.sapForm.ubiMarcaSexo === c.val ? 'selected' : ''}" data-val="${esc(c.val)}" data-desc="${esc(c.desc)}">
+<div class="clas-code">${esc(c.val)}</div>
+<div class="clas-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".clas-row", qs("#marcaSexoBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.ubiMarcaSexo = row.dataset.val;
+state.sapForm.ubiMarcaSexoDesc = row.dataset.desc;
+setState({ showMarcaSexo: false });
+toast(`Marca seleccionada: ${row.dataset.val}`);
+};
+});
+qs("#marcaSexoClose").onclick = () => setState({ showMarcaSexo: false });
+qs("#marcaSexoOk").onclick = () => setState({ showMarcaSexo: false });
+}
+function renderColorModal() {
+const back = qs("#colorBack");
+back.classList.toggle("show", !!state.showColor);
+if (!state.showColor) return;
+qs("#colorBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+</div>
+<div style="display:grid;gap:8px">
+${tipoInmuebleColorData.map(c => `
+<div class="clas-row ${state.sapForm.tipoInmColor === c.val ? 'selected' : ''}" data-val="${esc(c.val)}" data-desc="${esc(c.desc)}">
+<div class="clas-code">${esc(c.val)}</div>
+<div class="clas-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".clas-row", qs("#colorBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.tipoInmColor = row.dataset.val;
+state.sapForm.tipoInmColorDesc = row.dataset.desc;
+setState({ showColor: false });
+toast(`Color seleccionado: ${row.dataset.val}`);
+};
+});
+qs("#colorClose").onclick = () => setState({ showColor: false });
+qs("#colorOk").onclick = () => setState({ showColor: false });
+}
+function renderTipoBienModal() {
+const back = qs("#tipoBienBack");
+back.classList.toggle("show", !!state.showTipoBien);
+if (!state.showTipoBien) return;
+qs("#tipoBienBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+</div>
+<div style="display:grid;gap:8px">
+${tipoEstaBienInmuData.map(c => `
+<div class="clas-row ${state.sapForm.tipoEstaBienInmu === c.val ? 'selected' : ''}" data-val="${esc(c.val)}" data-desc="${esc(c.desc)}">
+<div class="clas-code">${esc(c.val)}</div>
+<div class="clas-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".clas-row", qs("#tipoBienBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.tipoEstaBienInmu = row.dataset.val;
+state.sapForm.tipoEstaBienInmuDesc = row.dataset.desc;
+setState({ showTipoBien: false });
+toast(`Tipo seleccionado: ${row.dataset.val}`);
+};
+});
+qs("#tipoBienClose").onclick = () => setState({ showTipoBien: false });
+qs("#tipoBienOk").onclick = () => setState({ showTipoBien: false });
+}
+function renderPaisModal() {
+const back = qs("#paisBack");
+back.classList.toggle("show", !!state.showPais);
+if (!state.showPais) return;
+qs("#paisBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">⚠️ CAMPO OBLIGATORIO</div>
+</div>
+<div style="display:grid;gap:8px">
+${paisesOrigenData.map(c => `
+<div class="pais-row ${state.sapForm.paisOrigen === c.code ? 'selected' : ''}" data-code="${esc(c.code)}" data-desc="${esc(c.desc)}">
+<div class="pais-code">${esc(c.code)}</div>
+<div class="pais-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".pais-row", qs("#paisBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.paisOrigen = row.dataset.code;
+state.sapForm.paisOrigenDesc = row.dataset.desc;
+setState({ showPais: false });
+toast(`País seleccionado: ${row.dataset.code}`);
+};
+});
+qs("#paisClose").onclick = () => setState({ showPais: false });
+qs("#paisOk").onclick = () => setState({ showPais: false });
+}
+function renderAcreedorModal() {
+const back = qs("#acreedorBack");
+back.classList.toggle("show", !!state.showAcreedor);
+if (!state.showAcreedor) return;
+qs("#acreedorBody").innerHTML = `
+<div style="margin-bottom:12px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px">
+<div style="font-weight:900;color:#dc2626;font-size:12px">ℹ️ Seleccione un acreedor</div>
+</div>
+<div style="display:grid;gap:8px">
+${acreedoresData.map(c => `
+<div class="acreedor-row ${state.sapForm.acreedor === c.code ? 'selected' : ''}" data-code="${esc(c.code)}" data-desc="${esc(c.desc)}">
+<div class="acreedor-code">${esc(c.code)}</div>
+<div class="acreedor-desc">${esc(c.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qsa(".acreedor-row", qs("#acreedorBody")).forEach(row => {
+row.onclick = () => {
+state.sapForm.acreedor = row.dataset.code;
+state.sapForm.acreedorDesc = row.dataset.desc;
+setState({ showAcreedor: false });
+toast(`Acreedor seleccionado: ${row.dataset.code}`);
+};
+});
+qs("#acreedorClose").onclick = () => setState({ showAcreedor: false });
+qs("#acreedorOk").onclick = () => setState({ showAcreedor: false });
+}
+function renderIPModal() {
+const back = qs("#ipBack");
+back.classList.toggle("show", !!state.showIP);
+if (!state.showIP) return;
+const filtered = filteredIP();
+qs("#ipBody").innerHTML = `
+<div style="margin-bottom:12px">
+<div class="ip-search-wrap">
+<span class="sicon">🔎</span>
+<input class="ip-search" id="ipSearchInput" type="text" placeholder="Buscar por código o descripción..." value="${esc(state.ipSearch)}">
+</div>
+<div style="font-size:11px;color:#64748b;display:flex;justify-content:space-between;align-items:center">
+<span>${filtered.length} entradas encontradas</span>
+</div>
+</div>
+<div style="max-height:500px;overflow:auto;-webkit-overflow-scrolling:touch">
+${filtered.map(ip => `
+<div class="ip-row ${state.sapForm.indicadorPropiedad === ip.code ? 'selected' : ''}" data-code="${esc(ip.code)}" data-desc="${esc(ip.desc)}">
+<div class="ip-code">${esc(ip.code)}</div>
+<div class="ip-desc">${esc(ip.desc)}</div>
+</div>
+`).join("")}
+</div>
+`;
+qs("#ipClose").onclick = () => setState({ showIP: false });
+qs("#ipOk").onclick = () => setState({ showIP: false });
+}
+function renderWelcomeModal() {
+const back = qs("#welcomeBack");
+back.classList.toggle("show", !!state.showWelcome);
+if (!state.showWelcome) return;
+qs("#welcomeCloseBtn").onclick = () => {
+setState({ showWelcome: false });
+if (qs("#dontShowWelcome").checked) localStorage.setItem('dilog_welcome_skipped', 'true');
+};
+qs("#welcomeStart").onclick = () => {
+setState({ showWelcome: false });
+if (qs("#dontShowWelcome").checked) localStorage.setItem('dilog_welcome_skipped', 'true');
+toast("¡Bienvenido a DILOG MDN!");
+};
+qs("#welcomeWizard").onclick = () => {
+setState({ showWelcome: false, showWizard: true });
+if (qs("#dontShowWelcome").checked) localStorage.setItem('dilog_welcome_skipped', 'true');
+};
+qs("#welcomeHelp").onclick = () => {
+setState({ showWelcome: false, showHelp: true });
+if (qs("#dontShowWelcome").checked) localStorage.setItem('dilog_welcome_skipped', 'true');
+};
+}
+function renderHelpModal() {
+const back = qs("#helpBack");
+back.classList.toggle("show", !!state.showHelp);
+qs("#helpClose").onclick = () => setState({ showHelp: false });
+qs("#helpOk").onclick = () => setState({ showHelp: false });
+}
+function renderViewsVisibility() {
+qs("#viewSap").style.display = (state.activeTab === "sap") ? "" : "none";
+qs("#viewCuentas").style.display = (state.activeTab === "cuentas") ? "" : "none";
+qs("#viewDrones").style.display = (state.activeTab === "drones") ? "" : "none";
+qs("#viewNormativo").style.display = (state.activeTab === "normativo") ? "" : "none";
+}
+function renderSidebar() {
+const sb = qs("#sidebar");
+sb.classList.toggle("compact", !state.sidebarOpen);
+qsa(".sb-btn").forEach(b => {
+b.classList.toggle("active", b.dataset.tab === state.activeTab);
+});
+}
+function render() {
+renderSidebar();
+renderHeaderTitle();
+renderTopbarRight();
+renderViewsVisibility();
+if (state.activeTab === "sap") renderSap();
+if (state.activeTab === "cuentas") renderCuentas();
+if (state.activeTab === "drones") renderDrones();
+if (state.activeTab === "normativo") renderNormativo();
+renderWizard();
+renderEstadoModal();
+renderCategoriaModal();
+renderInmEstModal();
+renderMarcaSexoModal();
+renderColorModal();
+renderTipoBienModal();
+renderPaisModal();
+renderAcreedorModal();
+renderIPModal();
+renderWelcomeModal();
+renderHelpModal();
+}
+// =========================
+// INIT EVENTS
+// =========================
+qs("#btnSidebar").onclick = () => {
+if (window.innerWidth <= 768) {
+qs("#sidebar").classList.toggle("open");
+} else {
+setState({ sidebarOpen: !state.sidebarOpen }, false);
+scheduleRender();
+}
+};
+// Quick Actions - Only Help
+qs("#qaHelp").onclick = () => setState({ showHelp: true });
+// Keyboard Shortcuts with ESC support
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+// Close any open modal
+['wizardBack', 'estadoBack', 'categoriaBack', 'inmEstBack', 'marcaSexoBack', 'colorBack', 'tipoBienBack', 'paisBack', 'acreedorBack', 'ipBack', 'welcomeBack', 'helpBack'].forEach(id => {
+const modal = qs(`#${id}`);
+if (modal && modal.classList.contains('show')) modal.classList.remove('show');
+});
+}
+if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toast("🔍 Búsqueda rápida"); }
+if (e.ctrlKey && e.key === 's') { e.preventDefault(); toast("💾 Guardado"); }
+if (e.key === 'F1') { e.preventDefault(); setState({ showHelp: true }); }
+});
+// Modal backdrop clicks
+['wizardBack', 'estadoBack', 'categoriaBack', 'inmEstBack', 'marcaSexoBack', 'colorBack', 'tipoBienBack', 'paisBack', 'acreedorBack', 'ipBack', 'welcomeBack', 'helpBack'].forEach(id => {
+qs(`#${id}`).addEventListener("click", (e) => {
+if (e.target.id === id) qs(`#${id}`).classList.remove('show');
+});
+});
+// Setup event delegation
+setupEventDelegation();
+// Check welcome on load
+checkWelcome();
+// First render
+scheduleRender();
+
+// =========================
+// LOGIN / AUTH
+// =========================
+(function(){
+  const PASS = "DILOG2026";
+  const SESSION_KEY = "dilog_auth";
+  const screen  = document.getElementById("loginScreen");
+  const passIn  = document.getElementById("loginPass");
+  const loginBtn= document.getElementById("loginBtn");
+  const errBox  = document.getElementById("loginError");
+  const app     = document.querySelector(".app");
+
+  function unlock(){
+    sessionStorage.setItem(SESSION_KEY, "1");
+    screen.style.transition = "opacity .4s ease";
+    screen.style.opacity = "0";
+    setTimeout(()=>{ screen.style.display="none"; }, 420);
+  }
+
+  // Already authenticated in this session?
+  if(sessionStorage.getItem(SESSION_KEY)==="1"){
+    screen.style.display="none";
+  } else {
+    // Hide app until authenticated
+    app.style.visibility = "hidden";
+  }
+
+  function attempt(){
+    const val = passIn.value;
+    if(val === PASS){
+      app.style.visibility = "";
+      errBox.classList.remove("show");
+      unlock();
+    } else {
+      errBox.classList.add("show");
+      passIn.value = "";
+      // Shake animation
+      const card = document.querySelector(".login-card");
+      card.classList.remove("login-shake");
+      void card.offsetWidth; // reflow
+      card.classList.add("login-shake");
+      passIn.focus();
+    }
+  }
+
+  loginBtn.addEventListener("click", attempt);
+  passIn.addEventListener("keydown", (e)=>{ if(e.key==="Enter") attempt(); });
+})();
+
+</script>
+</body>
+</html>
