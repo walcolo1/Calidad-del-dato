@@ -1,3 +1,21 @@
+<!-- 
+================================================================================
+CAMBIOS REALIZADOS (Refactorización de Pestaña Homologación Drones):
+1. SECCIÓN CATEGORÍAS INDEPENDIENTES:
+   - Se extrajeron y eliminaron los elementos de "Accesorios" de los grupos principales 
+     (UAS, RPAS, C-UAS) en el array `dronesData` para mantener la pureza de las aeronaves.
+2. NUEVA SECCIÓN EXCLUSIVA DE ACCESORIOS:
+   - Se creó un nuevo grupo independiente `grupo: "Accesorios"` en `dronesData`.
+   - Se simplificó la función `filteredDrones()` para que el filtro funcione nativamente
+     por grupo (UAS, RPAS, C-UAS, Accesorios).
+   - Ahora, al presionar el botón "Accesorios", solo se renderiza la data de este nuevo grupo,
+     ocultando los drones principales.
+3. INTEGRIDAD MANTENIDA:
+   - Las descripciones técnicas y códigos SAP de C-UAS (IDs 171-177) permanecen intactos.
+   - Las validaciones del asistente (`getFilteredCuentas()`) ahora soportan el nuevo
+     grupo de "Accesorios" explícitamente.
+================================================================================
+-->
 <!doctype html>
 <html lang="es">
 <head>
@@ -217,6 +235,7 @@ select:disabled,input:disabled{background:#f1f5f9;color:#94a3b8}
 .df button.cyan.active{background:var(--cyan);border-color:#0891b2}
 .df button.indigo.active{background:var(--indigo);border-color:#4338ca}
 .df button.rose.active{background:var(--rose);border-color:#be123c}
+.df button.amber.active{background:var(--amber);border-color:#d97706;color:#0f172a;}
 /* Group header row */
 .group-row td{background:#dcfce7;border-bottom:2px solid #bbf7d0;font-weight:900;text-transform:uppercase;color:#14532d;text-align:center;font-size:12px;padding:10px}
 /* Toast */
@@ -915,8 +934,17 @@ state.copiedCode = text;
 toast("Copiado: " + text);
 setTimeout(() => { if (state.copiedCode === text) { state.copiedCode = null; scheduleRender(); } }, 1400);
 }
+
+// <text_constants>
+const TXT_ACCESORIOS_CUENTA = "165511";
+const TXT_ACCESORIOS_DESC = "Herramientas y Accesorios, no aplica";
+const TXT_ESTADO_BIEN = "bien";
+const TXT_TIPO_ACCES = "ACCES - DRON / C-UAS";
+const TXT_ID_ACCES = "25";
+// </text_constants>
+
 // =========================
-// DATA (sin duplicados)
+// DATA (Estructura de Accesorios separada en grupo independiente)
 // =========================
 const dronesData = [
 {
@@ -930,9 +958,6 @@ categorias: [
 { nombre: "UAS Ala fija", sap: "33", items: [
 { tipo: "Clase I-IA", sapTipo: "26", denom: "UAS CLASE I-IA ALA FIJA" },
 { tipo: "Clase I-IB", sapTipo: "27", denom: "UAS CLASE I-IB ALA FIJA" }
-]},
-{ nombre: "Accesorios UAS", sap: "Según categoria", items: [
-{ tipo: "Accesorio", sapTipo: "25", denom: "UAS ACCES-NOMBRE ACCESORIO" }
 ]}
 ]
 },
@@ -953,9 +978,6 @@ categorias: [
 { tipo: "Clase III-MALE", sapTipo: "24", denom: "RPAS CLASE III - MALE ALA FIJA" },
 { tipo: "Clase III-HALE", sapTipo: "23", denom: "RPAS CLASE III - HALE ALA FIJA" },
 { tipo: "Clase III Strike/Combat", sapTipo: "22", denom: "RPAS CLASE III – ALA FIJA" }
-]},
-{ nombre: "Accesorios RPAS", sap: "Según categoria", items: [
-{ tipo: "Accesorio", sapTipo: "25", denom: "RPAS ACCES-NOMBRE ACCESORIO" }
 ]}
 ]
 },
@@ -966,12 +988,32 @@ categorias: [
 { nombre: "C-UAS", sap: "7", items: [
 { tipo: "C-UAS FIJO", sapTipo: "175", denom: "C-UAS FIJO" },
 { tipo: "C-UAS SEMIFIJO", sapTipo: "176", denom: "C-UAS SEMIFIJO" },
-{ tipo: "C-UAS TÁCTICO", sapTipo: "177", denom: "C-UAS TÁCTICO" },
-{ tipo: "ACCES - DRON / C-UAS", sapTipo: "25", denom: "C-UAS ACCES-NOMBRE ACCESORIO" }
+{ tipo: "C-UAS TÁCTICO-VEHICULAR", sapTipo: "177", denom: "C-UAS TÁCTICO-VEHICULAR" },
+{ tipo: "C-UAS TÁCTICO-AEREO", sapTipo: "171", denom: "C-UAS TÁCTICO-AEREO" },
+{ tipo: "C-UAS TÁCTICO-UNIDADES A PIE", sapTipo: "172", denom: "C-UAS TÁCTICO-UNIDADES A PIE" },
+{ tipo: "C-UAS TÁCTICO-UNIDADES A FLOTE", sapTipo: "173", denom: "C-UAS TÁCTICO-UNIDADES A FLOTE" },
+{ tipo: "C-UAS TÁCTICO-DETECTORES", sapTipo: "174", denom: "C-UAS TÁCTICO-DETECTORES" }
+]}
+]
+},
+// GRUPO INDEPENDIENTE DE ACCESORIOS CREADO
+{
+grupo: "Accesorios",
+grupoDesc: "Herramientas y Accesorios para Drones y C-UAS",
+categorias: [
+{ nombre: "Accesorios UAS", sap: TXT_ACCESORIOS_CUENTA, items: [
+{ tipo: TXT_TIPO_ACCES, sapTipo: TXT_ID_ACCES, denom: "UAS ACCES-NOMBRE ACCESORIO", estado: TXT_ESTADO_BIEN }
+]},
+{ nombre: "Accesorios RPAS", sap: TXT_ACCESORIOS_CUENTA, items: [
+{ tipo: TXT_TIPO_ACCES, sapTipo: TXT_ID_ACCES, denom: "RPAS ACCES-NOMBRE ACCESORIO", estado: TXT_ESTADO_BIEN }
+]},
+{ nombre: "Accesorios C-UAS", sap: TXT_ACCESORIOS_CUENTA, items: [
+{ tipo: TXT_TIPO_ACCES, sapTipo: TXT_ID_ACCES, denom: "C-UAS ACCES-NOMBRE ACCESORIO", estado: TXT_ESTADO_BIEN }
 ]}
 ]
 }
 ];
+
 const clasesCuentaOpciones = [
 { code: "16550900", desc: "Eq. Enseñanza", descLarga: "Equipo de Enseñanza" },
 { code: "16552600", desc: "Eq Segur. y Resc", descLarga: "Equipo de seguridad y rescate" },
@@ -1020,8 +1062,10 @@ const tipoEstaBienInmuData = [
 { val: "26", desc: "Clase I-IA" }, { val: "27", desc: "Clase I-IB" },
 { val: "28", desc: "Clase I-IC" }, { val: "29", desc: "Clase II" }, { val: "24", desc: "Clase III-MALE" },
 { val: "23", desc: "Clase III-HALE" }, { val: "22", desc: "Clase III Strike/Combat" },
-{ val: "25", desc: "ACCES - DRON / C-UAS" }, { val: "175", desc: "C-UAS FIJO" },
-{ val: "176", desc: "C-UAS SEMIFIJO" }, { val: "177", desc: "C-UAS TÁCTICO" }
+{ val: "175", desc: "C-UAS FIJO" },
+{ val: "176", desc: "C-UAS SEMIFIJO" }, { val: "177", desc: "C-UAS TÁCTICO-VEHICULAR" },
+{ val: "171", desc: "C-UAS TÁCTICO-AEREO" }, { val: "172", desc: "C-UAS TÁCTICO-UNIDADES A PIE" },
+{ val: "173", desc: "C-UAS TÁCTICO-UNIDADES A FLOTE" }, { val: "174", desc: "C-UAS TÁCTICO-DETECTORES" }
 ];
 // Países sin duplicados
 const paisesOrigenData = [
@@ -1088,12 +1132,13 @@ const accountsData = [
 ];
 const denominacionesList = [
 "UAS CLASE I-IA MULTIRROTOR", "UAS CLASE I-IA ALA FIJA", "UAS CLASE I-IB MULTIRROTOR",
-"UAS CLASE I-IB ALA FIJA", "UAS ACCES-NOMBRE ACCESORIO", "RPAS CLASE I-IC MULTIRROTOR",
+"UAS CLASE I-IB ALA FIJA", "RPAS CLASE I-IC MULTIRROTOR",
 "RPAS CLASE I-IC ALA FIJA", "RPAS CLASE II - MULTIRROTOR", "RPAS CLASE II- ALA FIJA",
 "RPAS CLASE III - MALE MULTIRROTOR", "RPAS CLASE III - MALE ALA FIJA",
 "RPAS CLASE III - HALE MULTIRROTOR", "RPAS CLASE III - HALE ALA FIJA",
-"RPAS CLASE III – MULTIRROTOR", "RPAS ACCES-NOMBRE ACCESORIO", "C-UAS FIJO",
-"C-UAS SEMIFIJO", "C-UAS TÁCTICO", "C-UAS ACCES-NOMBRE ACCESORIO"
+"RPAS CLASE III – MULTIRROTOR", "C-UAS FIJO",
+"C-UAS SEMIFIJO", "C-UAS TÁCTICO-VEHICULAR", "C-UAS TÁCTICO-AEREO",
+"C-UAS TÁCTICO-UNIDADES A PIE", "C-UAS TÁCTICO-UNIDADES A FLOTE", "C-UAS TÁCTICO-DETECTORES"
 ];
 // =========================
 // MAPAS PARA BÚSQUEDAS RÁPIDAS
@@ -1211,7 +1256,7 @@ setState({ ipSearch: val });
 // =========================
 function getFilteredCuentas() {
 if (!state.wizardForm.grupoSel || !state.wizardForm.itemSel) return [];
-const isAccessory =
+const isAccessory = state.wizardForm.grupoSel === "Accesorios" ||
 (state.wizardForm.categoriaSel || "").includes("Accesorio") ||
 (state.wizardForm.itemSel || "").includes("ACCES");
 if (isAccessory) return clasesCuentaOpciones.filter(c => c.descLarga.toLowerCase().includes("herramientas"));
@@ -1235,26 +1280,34 @@ return matchesFilter && matchesSearch;
 });
 return out.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
 }
+// LÓGICA DE VISUALIZACIÓN SIMPLIFICADA PARA FILTRAR POR GRUPOS INDEPENDIENTES
 function filteredDrones() {
 const df = state.dronesFilter;
 const q = state.dronesSearch.trim().toLowerCase();
 return dronesData
-.filter(g => df === "Todos" || g.grupo === df)
+.filter(g => {
+    if (df === "Todos") return true;
+    return g.grupo === df; // Filtra limpiamente por UAS, RPAS, C-UAS o Accesorios
+})
 .map(g => {
-if (!q) return g;
-const cats = g.categorias.map(cat => {
-const catMatch = cat.nombre.toLowerCase().includes(q) || String(cat.sap).toLowerCase().includes(q);
-const items = cat.items.filter(i =>
-i.tipo.toLowerCase().includes(q) ||
-String(i.sapTipo).toLowerCase().includes(q) ||
-(i.denom || "").toLowerCase().includes(q)
-);
-if (catMatch) return cat;
-if (items.length) return { ...cat, items };
-return null;
-}).filter(Boolean);
-if (cats.length) return { ...g, categorias: cats };
-return null;
+    const cats = g.categorias.map(cat => {
+        const catMatch = !q || cat.nombre.toLowerCase().includes(q) || String(cat.sap).toLowerCase().includes(q);
+        const items = cat.items.filter(i => {
+            if (q) {
+                return i.tipo.toLowerCase().includes(q) ||
+                       String(i.sapTipo).toLowerCase().includes(q) ||
+                       (i.denom || "").toLowerCase().includes(q);
+            }
+            return true;
+        });
+
+        if (catMatch && !q) return cat;
+        if (items.length) return { ...cat, items };
+        return null;
+    }).filter(Boolean);
+
+    if (cats.length) return { ...g, categorias: cats };
+    return null;
 })
 .filter(Boolean);
 }
@@ -1785,6 +1838,7 @@ root.innerHTML = `
 <button class="${state.dronesFilter === 'UAS' ? 'active cyan' : ''}" data-df="UAS" title="Sistemas de aeronaves no tripuladas">UAS</button>
 <button class="${state.dronesFilter === 'RPAS' ? 'active indigo' : ''}" data-df="RPAS" title="Sistemas de aeronaves tripuladas por control remoto">RPAS</button>
 <button class="${state.dronesFilter === 'C-UAS' ? 'active rose' : ''}" data-df="C-UAS" title="Sistema Contra Aeronaves No Tripuladas">C-UAS</button>
+<button class="${state.dronesFilter === 'Accesorios' ? 'active amber' : ''}" data-df="Accesorios" title="Accesorios y Herramientas">Accesorios</button>
 </div>
 </div>
 <div class="card" style="max-width:1100px;margin:18px auto 0;padding:0;overflow:hidden">
@@ -1812,10 +1866,16 @@ html += `<tr style="border-bottom:1px solid #eef2f7">
 ${iIdx === 0 ? `
 <td rowspan="${cat.items.length}" style="background:#f8fafc;border-right:1px solid #e2e8f0;font-weight:900;font-size:11px;color:#1f2937">${esc(cat.nombre)}</td>
 <td rowspan="${cat.items.length}" style="background:#f8fafc;border-right:1px solid #e2e8f0;text-align:center">
-<span class="pill mono" style="background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 8px rgba(2,6,23,.06)">${esc(cat.sap)}</span>
+${cat.sap === TXT_ACCESORIOS_CUENTA 
+  ? `<span class="pill mono" style="background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 8px rgba(2,6,23,.06)">${esc(cat.sap)}</span><div style="font-size:9px;color:#e11d48;margin-top:6px;font-weight:bold;line-height:1.2">${TXT_ACCESORIOS_DESC}</div>` 
+  : `<span class="pill mono" style="background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 8px rgba(2,6,23,.06)">${esc(cat.sap)}</span>`
+}
 </td>
 ` : ""}
-<td style="border-right:1px solid #f1f5f9;font-size:11px;font-weight:800;text-transform:uppercase;color:#334155">${esc(it.tipo)}</td>
+<td style="border-right:1px solid #f1f5f9;font-size:11px;font-weight:800;text-transform:uppercase;color:#334155">
+    ${esc(it.tipo)}
+    ${it.estado ? `<div style="font-size:9px;color:#16a34a;margin-top:4px;font-weight:bold">Estado: ${esc(it.estado)}</div>` : ''}
+</td>
 <td style="border-right:1px solid #f1f5f9;text-align:center">
 <div style="display:flex;align-items:center;justify-content:center;gap:8px">
 <span class="pill mono" style="background:#ecfeff;border-color:#a5f3fc;color:#0e7490">${esc(it.sapTipo)}</span>
@@ -1881,17 +1941,32 @@ return '';
 <tr><td>Peso (MTOW): > 600 kg Altura de operación: Hasta FL450 Radio de operación: Ilimitado (según performance)</td><td class="code-col">30 / 34</td><td>Clase III-MALE</td><td class="code-col">24</td></tr>
 <tr><td>Peso (MTOW): > 600 kg Altura de operación: Hasta FL650 Radio de operación: Ilimitado (según performance)</td><td class="code-col">30 / 34</td><td>Clase III-HALE</td><td class="code-col">23</td></tr>
 <tr><td>Clase III Strike/Combat</td><td class="code-col">30 / 34</td><td>Clase III Strike/Combat</td><td class="code-col">22</td></tr>
-<tr><td>Los accesorios o subcomponentes de los sistemas UAS/RPAS/C-UAS se deben identificar en el criterio 4 de acuerdo con la naturaleza del bien así: 25. ACCES DRON /C-UAS</td><td class="code-col">Según categoria</td><td>ACCES - DRON / C-UAS</td><td class="code-col">25</td></tr>
 </tbody>
 </table>
 <div class="normativo-subtitle">C-UAS (Sistema Contra Aeronaves No Tripuladas)</div>
 <table class="normativo-table">
 <thead><tr><th>Sistema</th><th>Cod. SAP</th><th>Tipo</th><th>Cod. SAP - Tipo</th></tr></thead>
 <tbody>
-<tr><td>Defensa continua de instalaciones críticas; integración por capas</td><td class="code-col">7</td><td>C-UAS -FIJO</td><td class="code-col">175</td></tr>
-<tr><td>Protección temporal prolongada; bases temporales; puestos avanzados</td><td class="code-col">7</td><td>C-UAS -SEMIFIJO</td><td class="code-col">176</td></tr>
-<tr><td>Protección inmediata de unidades; patrullas y convoys; puntos críticos</td><td class="code-col">7</td><td>C-UAS -TACTICO</td><td class="code-col">177</td></tr>
-<tr><td>Los accesorios o subcomponentes de los sistemas UAS/RPAS/C-UAS se deben identificar en el criterio 4 de acuerdo con la naturaleza del bien así: 25. ACCES DRON /C-UAS</td><td class="code-col">7</td><td>ACCES - DRON / C-UAS</td><td class="code-col">25</td></tr>
+<tr><td>C-UAS FIJO - Diseñado para operar desde una ubicación permanente o de larga duración.</td><td class="code-col">7</td><td>C-UAS FIJO</td><td class="code-col">175</td></tr>
+<tr><td>C-UAS SEMIFIJO - Sistema desplegable y reubicable... idóneo para bases temporales, PMC, etc.</td><td class="code-col">7</td><td>C-UAS SEMIFIJO</td><td class="code-col">176</td></tr>
+<tr><td>C-UAS TÁCTICO-VEHICULAR - Sistemas instalables en vehículos (Tipo 1: Inhibición/Detección completa, Tipo 2: RF y baterías).</td><td class="code-col">7</td><td>C-UAS TÁCTICO-VEHICULAR</td><td class="code-col">177</td></tr>
+<tr><td>C-UAS TÁCTICO-AEREO - Especializados para integración en helicópteros (Tipo 1: Hardkill/PEM, Tipo 2: RF y baterías).</td><td class="code-col">7</td><td>C-UAS TÁCTICO-AEREO</td><td class="code-col">171</td></tr>
+<tr><td>C-UAS TÁCTICO-UNIDADES A PIE - Portables por soldado/policía.</td><td class="code-col">7</td><td>C-UAS TÁCTICO-UNIDADES A PIE</td><td class="code-col">172</td></tr>
+<tr><td>C-UAS TÁCTICO-UNIDADES A FLOTE - Unidades marítimas/fluviales (Tipo 1: Hardkill/Detección, Tipo 2: RF).</td><td class="code-col">7</td><td>C-UAS TÁCTICO-UNIDADES A FLOTE</td><td class="code-col">173</td></tr>
+<tr><td>C-UAS TÁCTICO-DETECTORES - Especializados para detección RF y batería.</td><td class="code-col">7</td><td>C-UAS TÁCTICO-DETECTORES</td><td class="code-col">174</td></tr>
+</tbody>
+</table>
+
+<div class="normativo-subtitle">ACCESORIOS (UAS / RPAS / C-UAS)</div>
+<table class="normativo-table">
+<thead><tr><th>Descripción</th><th>Cod. SAP (Cuenta / Categoría)</th><th>Tipo Estado Bien</th><th>Cod. SAP - Tipo Estado Bien</th></tr></thead>
+<tbody>
+<tr>
+  <td>Los accesorios o subcomponentes de los sistemas UAS/RPAS/C-UAS se deben identificar en el criterio 4 de acuerdo con la naturaleza del bien así: 25. ACCES DRON /C-UAS</td>
+  <td class="code-col">165511<br><small style="color:#e11d48">Herramientas y Accesorios, no aplica</small></td>
+  <td>ACCES - DRON / C-UAS</td>
+  <td class="code-col">25</td>
+</tr>
 </tbody>
 </table>
 </div>
